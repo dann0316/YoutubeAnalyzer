@@ -210,6 +210,7 @@ app.get("/api/autocomplete", async (req: Request, res: Response) => {
 });
 
 // ✅ 서버 실행
-app.listen(PORT, () => {
-    console.log(`🚀 서버 실행 중: http://localhost:${PORT}`);
+app.listen(PORT, (_, res: Response) => {
+    console.log(`🚀 서버 실행 중: ${PORT}`);
+    res.send("잘되고 있음");
 });
