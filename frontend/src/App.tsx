@@ -12,8 +12,9 @@ function App() {
 
     // ✅ 유튜브 영상 검색
     const fetchVideos = async (isNextPage = false) => {
+
         try {
-            const url = `http://localhost:5000/api/videos?keyword=${keyword}${
+            const url = `http://43.203.72.105:5000/api/videos?keyword=${keyword}${
                 nextPageToken && isNextPage ? `&pageToken=${nextPageToken}` : ""
             }`;
             const response = await fetch(url);
@@ -44,7 +45,7 @@ function App() {
         }
         try {
             const response = await fetch(
-                `http://localhost:5000/api/autocomplete?keyword=${input}`
+                `http://43.203.72.105:5000/api/autocomplete?keyword=${input}`
             );
             const data = await response.json();
             setSuggestions(response.ok ? data.suggestions || [] : []);
