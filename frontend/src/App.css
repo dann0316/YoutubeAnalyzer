@@ -1,0 +1,7 @@
+.App {
+    @apply max-w-[100vw] min-h-[100vh] bg-white;
+}
+
+.container {
+    @apply w-full h-auto flex flex-col justify-start items-start pt-20;
+}
