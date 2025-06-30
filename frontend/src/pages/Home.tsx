@@ -1,56 +1,14 @@
-import { useState } from "react";
+import type { VideosType } from "../types/youtube.type";
 
-type Video = {
-    videoId: string;
-    thumbnail: string;
-    title: string;
-    description: string;
-    publishedAt: string;
-    channelTitle: string;
-    views: number;
-    performanceScore: number;
-};
+type HomePropsType = {
+    error: Error | null;
+    videos: VideosType[];
+    getPerformanceLabel: (score: number) => string;
+    fetchVideos: (isNextPage?: boolean) => void;
+    nextPageToken: boolean | null;
+}
 
-const Home = () => {
-    // 영상 정보 state
-    const [videos, setVideos] = useState<Video[]>([]);
-    //
-    const [nextPageToken, setNextPageToken] = useState<boolean | null>(null);
-    // 에러 state
-    const [error, setError] = useState<string>("");
-
-    // 유튜브 영상 검색
-    const fetchVideos = async (isNextPage = false) => {
-        try {
-            const url = `http://43.203.72.105:80/api/videos?keyword=${keyword}${
-                nextPageToken && isNextPage ? `&pageToken=${nextPageToken}` : ""
-            }`;
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (response.ok) {
-                setVideos(
-                    isNextPage ? [...videos, ...data.videos] : data.videos
-                );
-                setNextPageToken(data.nextPageToken || null);
-                setError("");
-            } else {
-                setError(data.error);
-            }
-        } catch (err: unknown) {
-            setError("서버 요청 실패");
-        }
-    };
-
-
-    // ✅ 성과도 점수를 5단계로 변환하는 함수
-    const getPerformanceLabel = (score: number) => {
-        if (score >= 90) return `Great 🚀 (${score})`;
-        if (score >= 70) return `Good 👍 (${score})`;
-        if (score >= 50) return `Normal 😐 (${score})`;
-        if (score >= 41) return `Bad 👎 (${score})`;
-        return `Worst ❌ (${score})`;
-    };
+const Home: React.FC<HomePropsType> = ({ error, videos, getPerformanceLabel, fetchVideos, nextPageToken}) => {
 
     return (
         <div className="container">
