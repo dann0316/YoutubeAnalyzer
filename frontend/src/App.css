@@ -1,7 +1,8 @@
-.App {
-    @apply max-w-[100vw] min-h-[100vh] bg-white;
+.container {
+    @apply w-full h-auto flex flex-col justify-center items-center pt-24 pb-14;
 }
 
-.container {
-    @apply w-full h-auto flex flex-col justify-start items-start pt-20;
+.btn {
+    @apply text-base text-[#3aad6c] font-bold border border-[#3aad6c] p-3 rounded-2xl transition-all duration-300 hover:text-white hover:bg-[#3aad6c]
+    uppercase;
 }

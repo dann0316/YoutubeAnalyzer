@@ -24,14 +24,14 @@ const Header: React.FC<HeaderPropsType> = ({ keyword, fetchSuggestions, handleKe
             {/* 오른쪽 검색창 */}
             <div className="relative">
                 
-                <div className="flex flex-row justify-between items-center bg-[#3aad6c]">
+                <div className="flex flex-row justify-between items-center bg-[#3aad6c] rounded-xl">
                     <input
                         type="text"
                         placeholder="검색할 키워드"
                         value={keyword}
                         onChange={(e) => fetchSuggestions(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="border-2 border-[#3aad6c] h-10"
+                        className="border-2 border-[#3aad6c] h-10 rounded-xl"
                     />
 
                     <button
@@ -44,9 +44,9 @@ const Header: React.FC<HeaderPropsType> = ({ keyword, fetchSuggestions, handleKe
                 </div>
 
                 {/* ✅ 자동완성 목록 */}
-                <div className="absolute left-0 top-full mt-1 w-full border border-black bg-white z-20">
+                <div className="absolute left-0 top-full mt-1 w-full bg-white z-20">
                     {suggestions.length > 0 && (
-                        <ul className="border-2 border-black">
+                        <ul className="border-2 border-[#3aad6c]">
                             {suggestions.map((suggestion, index) => (
                                 <li
                                     key={index}
