@@ -7,4 +7,7 @@ export interface VideosType {
     channelTitle: string;
     views: number;
     performanceScore: number;
+    likes: number;
+    comments: number;
+    
 }

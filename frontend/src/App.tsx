@@ -93,11 +93,11 @@ function App() {
     };
 
     return (
-        <div className="App">
+        <div className="w-screen h-auto">
             <Header keyword = {keyword} fetchSuggestions = {fetchSuggestions} handleKeyDown = {handleKeyDown} fetchVideos = {fetchVideos} suggestions = {suggestions} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} setKeyword={setKeyword} setSuggestions = {setSuggestions}/>
 
             <Routes>
-                <Route path="/" element={<Home error = {error} videos = {videos} getPerformanceLabel = {getPerformanceLabel} fetchVideos = {fetchVideos} nextPageToken = {nextPageToken}/>} />
+                <Route path="/" element={<Home error = {error} videos = {videos} getPerformanceLabel = {getPerformanceLabel} fetchVideos = {fetchVideos} nextPageToken = {nextPageToken} setVideos={setVideos}/>} />
             </Routes>
         </div>
     );
