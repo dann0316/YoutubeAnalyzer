@@ -1,0 +1,29 @@
+name: Deploy to EC2
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    Deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: SSH로 EC2 접속
+              uses: appleboy/ssh-action@v1
+              with:
+                  host: ${{ secrets.EC2__HOST }}
+                  username: ${{ secrets.EC2_USERNAME }}
+                  key: ${{ secrets.EC2_PRIVATE_KEY }}
+                  port: ${{ secrets.EC2_PORT }}
+                #   script_stop: true # 아래 script 중 하나라도 실패하면 실패처리
+                  script: |
+                      sudo su
+                      cd /YoutubeAnalyzer/backend
+                      git pull origin main
+                      npm ci
+                      pm2 kill
+                      pm2 start server.js
+
+# env 파일도 여기에 넣어서 하는 게 안전한가? 만약 안전하면 제어문 써서 backend 파일에 .env 파일 있으면 그대로 진행하고 없으면 여기에 작성한 .env 파일로 돌릴 수 있게 해야겠다
+
