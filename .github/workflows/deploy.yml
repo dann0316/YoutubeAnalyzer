@@ -16,14 +16,13 @@ jobs:
                   username: ${{ secrets.EC2_USERNAME }}
                   key: ${{ secrets.EC2_PRIVATE_KEY }}
                   script: |
-                    set -e
+                    sudo chown -R $USER:$USER /home/ubuntu/YoutubeAnalyzer
                     cd /home/ubuntu/YoutubeAnalyzer
                     git config --global --add safe.directory /home/ubuntu/YoutubeAnalyzer
                     git pull origin main
                     cd backend
                     npm install
-                    pm2 kill
-                    pm2 start server.js
+                    pm2 restart server.js
 
 # env 파일도 여기에 넣어서 하는 게 안전한가? 만약 안전하면 제어문 써서 backend 파일에 .env 파일 있으면 그대로 진행하고 없으면 여기에 작성한 .env 파일로 돌릴 수 있게 해야겠다
 # .env 파일 github에서 커밋 내역에서랑 지금 다 지우기
