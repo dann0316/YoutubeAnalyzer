@@ -12,7 +12,7 @@ jobs:
             - name: SSH로 EC2 접속
               uses: appleboy/ssh-action@v1
               env:
-                  ${{ secrets.ENV }}
+                  ENV: ${{ secrets.ENV }}
               with:
                   host: ${{ secrets.EC2_HOST }}
                   username: ${{ secrets.EC2_USERNAME }}
@@ -32,4 +32,4 @@ jobs:
 
 # env 파일도 여기에 넣어서 하는 게 안전한가? 만약 안전하면 제어문 써서 backend 파일에 .env 파일 있으면 그대로 진행하고 없으면 여기에 작성한 .env 파일로 돌릴 수 있게 해야겠다
 # .env 파일 github에서 커밋 내역에서랑 지금 다 지우기
-# 
+# github 동작원리랑 react 동작원리랑 비슷한가? 가상 ~ 있어서 변경 사항만 반영하는?
