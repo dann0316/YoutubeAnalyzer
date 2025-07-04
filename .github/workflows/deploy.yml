@@ -12,7 +12,7 @@ jobs:
             - name: SSH로 EC2 접속
               uses: appleboy/ssh-action@v1
               with:
-                  host: ${{ secrets.EC2__HOST }}
+                  host: ${{ secrets.EC2_HOST }}
                   username: ${{ secrets.EC2_USERNAME }}
                   key: ${{ secrets.EC2_PRIVATE_KEY }}
                   port: ${{ secrets.EC2_PORT }}
