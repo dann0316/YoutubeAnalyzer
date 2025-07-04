@@ -11,16 +11,21 @@ jobs:
         steps:
             - name: SSH로 EC2 접속
               uses: appleboy/ssh-action@v1
+              env:
+                  ${{ secrets.ENV }}
               with:
                   host: ${{ secrets.EC2_HOST }}
                   username: ${{ secrets.EC2_USERNAME }}
                   key: ${{ secrets.EC2_PRIVATE_KEY }}
+                  envs: ENV
                   script: |
                     sudo chown -R $USER:$USER /home/ubuntu/YoutubeAnalyzer
                     cd /home/ubuntu/YoutubeAnalyzer
                     git config --global --add safe.directory /home/ubuntu/YoutubeAnalyzer
                     git pull origin main
                     cd backend
+                    rm -rf .env
+                    echo "$ENV" > .env
                     npm install
                     pm2 kill
                     pm2 start server.js
