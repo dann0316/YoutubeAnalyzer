@@ -160,6 +160,7 @@ app.get("/api/autocomplete", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }));
 // ✅ 서버 실행
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', (req, res) => {
     console.log(`🚀 서버 실행 중: ${PORT}`);
+    res.send('서버 실행됨');
 });
