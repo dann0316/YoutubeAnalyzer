@@ -14,7 +14,7 @@ const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 const app = express();
-const PORT = 80;
+const PORT = 22;
 app.use(cors());
 // ✅ 영상 길이에 따른 예상 시청 지속율 계산 함수
 function getEstimatedWatchTimeRate(videoLength) {
