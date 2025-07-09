@@ -5,7 +5,7 @@ const cors = require("cors");
 import type { Request, Response } from "express";
 
 const app = express();
-const PORT = 22;
+const PORT = 80;
 
 app.use(cors());
 
