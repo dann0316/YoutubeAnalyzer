@@ -3,6 +3,8 @@ import Home from "./pages/Home";
 import Header from "./components/Header";
 import "./App.css";
 import { useState } from "react";
+import Detail from "./pages/Detail";
+import type { VideosType } from "./types/youtube.type";
 
 function App() {
     // 커스텀 훅으로 로직 빼고 나머지 props로 전달
@@ -15,16 +17,16 @@ function App() {
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
     // 영상 정보 state
-    const [videos, setVideos] = useState([]);
+    const [videos, setVideos] = useState<VideosType[]>([]);
     //
     const [nextPageToken, setNextPageToken] = useState<boolean | null>(null);
     // 에러 state
-    const [error, setError] = useState<string>("");
+    const [error, setError] = useState<Error | null>(null);
 
     // 유튜브 영상 검색
     const fetchVideos = async (isNextPage = false) => {
         try {
-            const url = `http://43.203.72.105:80/api/videos?keyword=${keyword}${
+            const url = `http://43.203.72.105:3000/api/videos?keyword=${keyword}${
                 nextPageToken && isNextPage ? `&pageToken=${nextPageToken}` : ""
             }`;
             const response = await fetch(url);
@@ -35,12 +37,12 @@ function App() {
                     isNextPage ? [...videos, ...data.videos] : data.videos
                 );
                 setNextPageToken(data.nextPageToken || null);
-                setError("");
+                setError(null);
             } else {
                 setError(data.error);
             }
         } catch (err: unknown) {
-            setError("서버 요청 실패");
+            console.error(err);
         }
     };
 
@@ -55,7 +57,7 @@ function App() {
         }
         try {
             const response = await fetch(
-                `http://43.203.72.105:80/api/autocomplete?keyword=${input}`
+                `http://43.203.72.105:3000/api/autocomplete?keyword=${input}`
             );
             const data = await response.json();
             setSuggestions(response.ok ? data.suggestions || [] : []);
@@ -120,6 +122,7 @@ function App() {
                         />
                     }
                 />
+                <Route path="/detail/:videoId" element={<Detail />} />
             </Routes>
         </div>
     );
