@@ -5,3 +5,5 @@ const Detail = () => {
         </main>
     )
 }
+
+export default Detail;
