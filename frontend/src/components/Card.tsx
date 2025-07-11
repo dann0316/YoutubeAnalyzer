@@ -6,6 +6,7 @@ const Card = ({video, getPerformanceLabel}: {video: VideosType, getPerformanceLa
 
     const navigate = useNavigate();
     
+
     return (
         <div
             className="border border-[#3aad6c] rounded-3xl w-full flex flex-row justify-center items-center gap-3 overflow-hidden p-3 cursor-pointer"
