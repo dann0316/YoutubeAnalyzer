@@ -19,3 +19,11 @@ export interface HomePropsType {
     fetchVideos: (isNextPage?: boolean) => void;
     nextPageToken: boolean | null;
 }
+
+export interface storeType {
+    videos: VideosType[]
+    nextPageToken: string | null
+    setVideos: (videos: VideosType[]) => void
+    setNextPageToken: (token: string | null) => void
+    keyword: string
+}

@@ -37,6 +37,7 @@ const Header: React.FC<HeaderPropsType> = ({ keyword, fetchSuggestions, handleKe
                     <button
                         onClick={() => fetchVideos()}
                         className="text-white"
+                        aria-label="검색"
                     >
                         <FaSearch />
                     </button>

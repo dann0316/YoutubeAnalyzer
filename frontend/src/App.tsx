@@ -4,8 +4,17 @@ import Header from "./components/Header";
 import "./App.css";
 import Detail from "./pages/Detail";
 import { useYoutubeData } from "./hooks/useYoutubeData";
+import { useAutoCompleteData } from "./hooks/useAutoCompleteData";
 
 function App() {
+    const {
+        fetchVideos,
+        videos,
+        setVideos,
+        nextPageToken,
+        error,
+    } = useYoutubeData();
+
     const {
         keyword,
         setKeyword,
@@ -15,13 +24,16 @@ function App() {
         setSelectedIndex,
         fetchSuggestions,
         handleKeyDown,
-        fetchVideos,
-        getPerformanceLabel,
-        videos,
-        setVideos,
-        nextPageToken,
-        error,
-    } = useYoutubeData();
+    } = useAutoCompleteData();
+
+    // 성과도 점수를 5단계로 변환하는 함수
+    const getPerformanceLabel = (score: number) => {
+        if (score >= 90) return `Great 🚀 (${score})`;
+        if (score >= 70) return `Good 👍 (${score})`;
+        if (score >= 50) return `Normal 😐 (${score})`;
+        if (score >= 41) return `Bad 👎 (${score})`;
+        return `Worst ❌ (${score})`;
+    };
 
     return (
         <div className="w-screen h-auto">
