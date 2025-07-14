@@ -5,8 +5,10 @@ import "./App.css";
 import Detail from "./pages/Detail";
 import { useYoutubeData } from "./hooks/useYoutubeData";
 import { useAutoCompleteData } from "./hooks/useAutoCompleteData";
+import { useStore } from "./stores/store";
 
 function App() {
+    
     const {
         fetchVideos,
         videos,
@@ -16,8 +18,6 @@ function App() {
     } = useYoutubeData();
 
     const {
-        keyword,
-        setKeyword,
         suggestions,
         setSuggestions,
         selectedIndex,
@@ -25,6 +25,9 @@ function App() {
         fetchSuggestions,
         handleKeyDown,
     } = useAutoCompleteData();
+
+    const {keyword} = useStore();
+    const setKeyword = useStore((state) => state.setKeyword);
 
     // 성과도 점수를 5단계로 변환하는 함수
     const getPerformanceLabel = (score: number) => {

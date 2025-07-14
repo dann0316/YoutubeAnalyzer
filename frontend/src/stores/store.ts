@@ -7,6 +7,9 @@ export const useStore = create<storeType>((set) => ({
     setVideos: (videos) => set({ videos }),
     setNextPageToken: (token) => set({ nextPageToken: token }),
     keyword: "",
+    setKeyword(input :string) {
+        set((state) => ({keyword: state.keyword = input}));
+    }
 }))
 
 // set은 Zustand가 내부적으로 주입하는 함수 (상태 변경함수)

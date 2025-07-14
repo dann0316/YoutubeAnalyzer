@@ -1,9 +1,11 @@
 import { useState } from "react";
 import type { VideosType } from "../types/youtube.type";
+import { useStore } from "../stores/store";
 // import { fetchYoutubeVideos } from "../utils/services";
 
-export const useYoutubeData = (keyword: string) => {
+export const useYoutubeData = () => {
 
+    const {keyword} = useStore();
     // 영상 정보 state
     const [videos, setVideos] = useState<VideosType[]>([]);
     // 데이터 더 보기 토큰 state

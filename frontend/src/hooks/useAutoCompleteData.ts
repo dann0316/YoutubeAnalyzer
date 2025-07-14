@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useStore } from "../stores/store";
 
 export const useAutoCompleteData = () => {
     // 검색 키워드 state
-    const [keyword, setKeyword] = useState<string>("");
+    // const [keyword, setKeyword] = useState<string>("");
+    const {keyword} = useStore();
+    const setKeyword = useStore((state) => state.setKeyword);
     // 자동 완성 state
     const [suggestions, setSuggestions] = useState<string[]>([]);
     // 선택된 자동완성 항목
@@ -28,6 +31,8 @@ export const useAutoCompleteData = () => {
             setSuggestions([]);
         }
     };
+
+    
 
     // 키보드 이벤트 핸들러 함수
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

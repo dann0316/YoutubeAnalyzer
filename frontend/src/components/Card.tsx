@@ -1,18 +1,11 @@
 import ViewsByChart from "./viewsByChart";
 import type { VideosType } from "../types/youtube.type";
-import { useNavigate } from "react-router-dom";
 
 const Card = ({video, getPerformanceLabel}: {video: VideosType, getPerformanceLabel: (score: number) => string}) => {
-
-    const navigate = useNavigate();
-    
 
     return (
         <div
             className="border border-[#3aad6c] rounded-3xl w-full flex flex-row justify-center items-center gap-3 overflow-hidden p-3 cursor-pointer"
-            onClick={() => {
-                navigate(`/detail/${video.videoId}`)
-            }}
         >
             <div className="w-4/12">
                 <img

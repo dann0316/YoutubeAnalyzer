@@ -9,6 +9,7 @@ export interface VideosType {
     performanceScore: number;
     likes: number;
     comments: number;
+    modal: boolean
 }
 
 export interface HomePropsType {
@@ -26,4 +27,5 @@ export interface storeType {
     setVideos: (videos: VideosType[]) => void
     setNextPageToken: (token: string | null) => void
     keyword: string
+    setKeyword: (input :string) => void
 }
