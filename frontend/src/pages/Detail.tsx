@@ -48,6 +48,12 @@ const Detail = ({
     >
       <div className="w-4/6 h-4/6 border borde-white bg-white rounded-3xl p-10">
         <h4 className="text-3xl">{selectedVideo?.title}</h4>
+        <img
+                    src={selectedVideo?.thumbnail}
+                    loading="lazy"
+                    alt="썸네일"
+                    className="w-20"
+                />
         <button
           onClick={() => {
             setModal(false);
