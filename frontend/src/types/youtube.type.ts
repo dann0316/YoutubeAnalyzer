@@ -9,7 +9,7 @@ export interface VideosType {
     performanceScore: number;
     likes: number;
     comments: number;
-    modal: boolean
+    // setModal:
 }
 
 export interface HomePropsType {
@@ -27,5 +27,5 @@ export interface storeType {
     setVideos: (videos: VideosType[]) => void
     setNextPageToken: (token: string | null) => void
     keyword: string
-    setKeyword: (input :string) => void
+    setKeyword: React.Dispatch<React.SetStateAction<string>>
 }

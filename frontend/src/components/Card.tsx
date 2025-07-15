@@ -1,11 +1,15 @@
 import ViewsByChart from "./viewsByChart";
 import type { VideosType } from "../types/youtube.type";
 
-const Card = ({video, getPerformanceLabel}: {video: VideosType, getPerformanceLabel: (score: number) => string}) => {
+const Card = ({video, getPerformanceLabel, setModal, setSelectedVideo}: {video: VideosType, getPerformanceLabel: (score: number) => string}) => {
 
     return (
         <div
             className="border border-[#3aad6c] rounded-3xl w-full flex flex-row justify-center items-center gap-3 overflow-hidden p-3 cursor-pointer"
+            onClick={() => {
+                setModal(true);
+                setSelectedVideo(video);
+            }}
         >
             <div className="w-4/12">
                 <img

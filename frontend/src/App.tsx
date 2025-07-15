@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Header from "./components/Header";
 import "./App.css";
-import Detail from "./pages/Detail";
+// import Detail from "./pages/Detail";
 import { useYoutubeData } from "./hooks/useYoutubeData";
 import { useAutoCompleteData } from "./hooks/useAutoCompleteData";
 import { useStore } from "./stores/store";
@@ -66,7 +66,7 @@ function App() {
                         />
                     }
                 />
-                <Route path="/detail/:videoId" element={<Detail />} />
+                {/* <Route path="/detail/:videoId" element={<Detail />} /> */}
             </Routes>
         </div>
     );
