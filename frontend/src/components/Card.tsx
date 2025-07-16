@@ -1,17 +1,24 @@
-import ViewsByChart from "./viewsByChart";
 import type { VideosType } from "../types/youtube.type";
 
-const Card = ({video, getPerformanceLabel, setModal, setSelectedVideo}: {video: VideosType, getPerformanceLabel: (score: number) => string}) => {
-
+const Card = ({
+    video,
+    getPerformanceLabel,
+    setModal,
+    setSelectedVideo,
+}: {
+    video: VideosType;
+    getPerformanceLabel: (score: number) => string;
+    
+}) => {
     return (
         <div
-            className="border border-[#3aad6c] rounded-3xl w-full flex flex-row justify-center items-center gap-3 overflow-hidden p-3 cursor-pointer"
+            className="border border-[#3aad6c] bg-white rounded-3xl w-full flex flex-row justify-between items-center gap-10 overflow-hidden p-3 cursor-pointer text-black transition-all duration-300 hover:text-white hover:bg-[#47d383]"
             onClick={() => {
                 setModal(true);
                 setSelectedVideo(video);
             }}
         >
-            <div className="w-4/12">
+            <div className="w-2/12 rounded-2xl overflow-hidden">
                 <img
                     src={video.thumbnail}
                     loading="lazy"
@@ -20,41 +27,21 @@ const Card = ({video, getPerformanceLabel, setModal, setSelectedVideo}: {video: 
                 />
             </div>
 
-            <div className="w-4/12 flex flex-col justify-start items-start gap-5">
-                <h3 className="text-lg font-bold">영상 제목: {video.title}</h3>
-                {/* <p> {video.description}</p> */}
-                <p>
-                    업로드 날짜:{" "}
-                    {new Date(video.publishedAt).toLocaleDateString()}
-                </p>
-                <p>채널명: {video.channelTitle}</p>
-                <p>좋아요 수: {video.likes}</p>
-                <p>댓글 수: {video.comments}</p>
-                <p>조회수: {video.views}</p>
-                <a
-                    href={`https://www.youtube.com/watch?v=${video.videoId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    🔗 영상 보기
-                </a>
+            <div className="w-4/12 flex justify-center items-center">
+                <h3 className="text-lg font-bold">
+                    {video.title}
+                </h3>
             </div>
 
-            <div className="w-3/12 flex flex-col justify-start items-center gap-5">
-                <h3 className="text-lg font-bold">영상별 반응 비율</h3>
-                <div className="h-60 w-60">
-                    <ViewsByChart
-                        views={video.views}
-                        likes={video.likes}
-                        comments={video.comments}
-                    />
-                </div>
+            <div className="w-2/12 flex justify-center items-center">{video.views}</div>
+
+            <div className="w-2/12 flex justify-center items-center"></div>
+
+            <div className="w-2/12 flex justify-center items-center">{getPerformanceLabel(video.performanceScore)}
             </div>
 
-            <p className="">
-                <strong>⭐ 성과도:</strong>{" "}
-                {getPerformanceLabel(video.performanceScore)}
-            </p>
+            <div className="w-2/12 flex justify-center items-center">{new Date(video.publishedAt).toLocaleDateString()}
+            </div>
         </div>
     );
 };

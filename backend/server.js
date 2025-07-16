@@ -16,7 +16,7 @@ const cors = require("cors");
 const app = express();
 const PORT = 3000;
 app.use(cors());
-// ✅ 영상 길이에 따른 예상 시청 지속율 계산 함수
+// 영상 길이에 따른 예상 시청 지속율 계산 함수
 function getEstimatedWatchTimeRate(videoLength) {
     if (videoLength <= 180) {
         // 3분 이하
@@ -39,7 +39,7 @@ function getUploadTimeBonus(publishedAt) {
     const hour = new Date(publishedAt).getHours();
     return hour >= 18 && hour <= 21 ? 5 : 0;
 }
-// ✅ 성과도 계산 함수 (Viewtrap 유사 알고리즘 적용)
+// 성과도 계산 함수
 function calculatePerformanceScore(views, subscribers, daysSincePosted, likes, comments, averageViewDuration, videoLength, title, keyword, publishedAt) {
     const speedScore = Math.min((views / daysSincePosted) * 0.002, 30);
     const retentionRate = (averageViewDuration / videoLength) * 100;
@@ -55,7 +55,7 @@ function calculatePerformanceScore(views, subscribers, daysSincePosted, likes, c
         keywordMatchScore +
         timeBonus);
 }
-// ✅ YouTube 영상 검색 API + 성과도 계산
+// YouTube 영상 검색 API + 성과도 계산
 app.get("/api/videos", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { keyword, pageToken } = req.query;
@@ -100,6 +100,7 @@ app.get("/api/videos", (req, res) => __awaiter(void 0, void 0, void 0, function*
                 thumbnail: item.snippet.thumbnails.high.url,
                 publishedAt: item.snippet.publishedAt,
                 channelTitle: item.snippet.channelTitle,
+                channelId: item.snippet.channelId,
                 views,
                 likes,
                 comments,
@@ -122,7 +123,7 @@ app.get("/api/videos", (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
     }
 }));
-// ✅ 유튜브 영상 길이 변환 (PnDTnHnMnS → 초)
+// 유튜브 영상 길이 변환 (PnDTnHnMnS → 초)
 function convertDurationToSeconds(duration) {
     const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
     if (!match)
@@ -132,14 +133,14 @@ function convertDurationToSeconds(duration) {
     const seconds = match[3] ? parseInt(match[3]) : 0;
     return hours * 3600 + minutes * 60 + seconds;
 }
-// ✅ 업로드 후 경과 일수 계산
+// 업로드 후 경과 일수 계산
 function getDaysSincePosted(publishedAt) {
     const publishedDate = new Date(publishedAt);
     const today = new Date();
     const diffTime = Math.abs(today.getTime() - publishedDate.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
-// ✅ 검색 자동완성 API
+// 검색 자동완성 API
 app.get("/api/autocomplete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { keyword } = req.query;
@@ -157,6 +158,84 @@ app.get("/api/autocomplete", (req, res) => __awaiter(void 0, void 0, void 0, fun
             error: "자동완성 데이터를 가져오는 중 오류 발생",
             details: error.message,
         });
+    }
+}));
+// 베스트 댓글 API
+app.get("/api/comments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const videoId = req.query.videoId;
+    if (!videoId) {
+        return res.status(400).json({ error: 'videoId 쿼리 파라미터가 필요합니다.' });
+    }
+    try {
+        const response = yield axios.get(`https://www.googleapis.com/youtube/v3/commentThreads`, {
+            params: {
+                part: 'snippet',
+                videoId: videoId,
+                order: 'relevance',
+                maxResults: 50,
+                key: process.env.YOUTUBE_API_KEY,
+            },
+        });
+        const items = response.data.items;
+        if (!items || items.length === 0) {
+            return res.status(404).json({ message: '댓글이 없습니다.' });
+        }
+        // 가장 좋아요 많은 댓글 찾기
+        let bestComment = items[0].snippet.topLevelComment.snippet;
+        for (const item of items) {
+            const current = item.snippet.topLevelComment.snippet;
+            if (current.likeCount > bestComment.likeCount) {
+                bestComment = current;
+            }
+        }
+        res.json({
+            author: bestComment.authorDisplayName,
+            text: bestComment.textDisplay,
+            likeCount: bestComment.likeCount,
+            publishedAt: bestComment.publishedAt,
+        });
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'YouTube API 요청 실패' });
+    }
+}));
+// 채널 정보 가져오기
+app.get("/api/channel", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const channelId = req.query.id;
+    if (!channelId) {
+        return res.status(400).json({ error: "채널 ID가 필요합니다." });
+    }
+    try {
+        const response = yield axios.get("https://www.googleapis.com/youtube/v3/channels", {
+            params: {
+                part: "snippet,statistics",
+                id: channelId,
+                key: process.env.YOUTUBE_API_KEY,
+            },
+        });
+        const items = response.data.items;
+        if (!items || items.length === 0) {
+            return res.status(404).json({ message: "채널 정보를 찾을 수 없습니다." });
+        }
+        const channel = items[0];
+        const snippet = channel.snippet;
+        const statistics = channel.statistics;
+        res.json({
+            id: channel.id,
+            title: snippet.title,
+            description: snippet.description,
+            thumbnail: (_b = (_a = snippet.thumbnails) === null || _a === void 0 ? void 0 : _a.default) === null || _b === void 0 ? void 0 : _b.url,
+            publishedAt: snippet.publishedAt,
+            subscriberCount: statistics.subscriberCount,
+            videoCount: statistics.videoCount,
+            viewCount: statistics.viewCount,
+        });
+    }
+    catch (error) {
+        console.error("YouTube API 요청 실패:", error.message);
+        res.status(500).json({ error: "YouTube API 요청 실패" });
     }
 }));
 // ✅ 서버 실행

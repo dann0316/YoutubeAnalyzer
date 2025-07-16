@@ -5,10 +5,12 @@ export interface VideosType {
     description: string;
     publishedAt: string;
     channelTitle: string;
+    channelId: string;
     views: number;
     performanceScore: number;
     likes: number;
     comments: number;
+
     // setModal:
 }
 
