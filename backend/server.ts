@@ -292,7 +292,6 @@ app.get("/api/channel", async (req: Request, res: Response) => {
             id: channel.id,
             title: snippet.title,
             description: snippet.description,
-            customUrl: snippet.customUrl,
             thumbnail: snippet.thumbnails?.default?.url,
             publishedAt: snippet.publishedAt,
             subscriberCount: statistics.subscriberCount,

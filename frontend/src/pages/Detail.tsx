@@ -40,6 +40,8 @@ const Detail = ({
     const [channelDes, setChannelDes] = useState<string>("");
     const [channelDate, setChannelDate] = useState<string>("");
     const [channelSub, setChannelSub] = useState<number>();
+    const [channelViewCount, setChannelViewCount] = useState<number>();
+    const [channelVideoCount, setChannelVideoCount] = useState<number>();
 
     const fetchChannelInfo = async () => {
         try {
@@ -62,6 +64,8 @@ const Detail = ({
             setChannelDes(data.description);
             setChannelDate(data.publishedAt);
             setChannelSub(data.subscriberCount);
+            setChannelViewCount(data.viewCount);
+            setChannelVideoCount(data.videoCount);
         } catch (error) {
             console.error(error);
         }
@@ -265,6 +269,37 @@ const Detail = ({
                             <InfoCard
                                 cardTitle="구독자 수"
                                 cardContent={channelSub}
+                            />
+                        </div>
+
+                        {/* third information section */}
+                        <div className="w-full h-auto flex flex-row gap-5">
+                            <InfoCard
+                                className="w-1/3"
+                                cardTitle="누적 조회수"
+                                cardContent={channelViewCount}
+                            />
+                            <InfoCard
+                                className="w-1/3"
+                                cardTitle="총 영상 수"
+                                cardContent={channelVideoCount}
+                            />
+                            <InfoCard
+                                className="w-1/3"
+                                cardTitle="채널 개설일"
+                                cardContent={channelDate}
+                            />
+                        </div>
+
+                        {/* fourth information section */}
+                        <div className="w-full h-auto flex flex-row gap-5">
+                            <InfoCard
+                                cardTitle="평균 조회수"
+                                cardContent={""}
+                            />
+                            <InfoCard
+                                cardTitle="평균 좋아요"
+                                cardContent={""}
                             />
                         </div>
                     </TabsContent>

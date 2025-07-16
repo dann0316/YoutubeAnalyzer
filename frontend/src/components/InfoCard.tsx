@@ -1,6 +1,6 @@
 const infoCard = ({cardTitle, cardContent, className}: {
     cardTitle: string,
-    cardContent: string | number,
+    cardContent: string | number | undefined,
     className?: string,
 }) => {
     return (
