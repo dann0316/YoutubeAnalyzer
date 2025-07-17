@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import type { VideosType } from "../types/youtube.type";
+import type { VideosType } from "../../types/youtube.type";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import InfoCard from "../components/InfoCard";
-import ViewsByChart from "../components/viewsByChart";
+import InfoCard from "../viewui/InfoCard";
+import ViewsByChart from "../viewui/viewsByChart";
 import { FaTimes } from 'react-icons/fa';
+import { Link } from "react-router-dom";
 
 const Detail = ({
     selectedVideo,
@@ -112,11 +113,11 @@ const Detail = ({
         >
             <div
                 className={`overflow-x-hidden overflow-y-auto w-7/12 h-7/12 max-h-7/12 border borde-white bg-[#eeeeee] rounded-3xl p-5 relative transition-all duration-300
-    ${
-        modal
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95 pointer-events-none"
-    }
+            ${
+                modal
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-95 pointer-events-none"
+            }
     `}
             >
                 <button
@@ -171,14 +172,14 @@ const Detail = ({
                                     |<p>좋아요: {selectedVideo?.likes}</p>|
                                     <p>댓글: {selectedVideo?.comments}</p>
                                 </div>
-                                <a
-                                    href={`https://www.youtube.com/watch?v=${selectedVideo?.videoId}`}
+                                <Link
+                                    to={`https://www.youtube.com/watch?v=${selectedVideo?.videoId}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="border border-[#3aad6c] bg-white text-[#3aad6c] text-base hover:bg-[#3aad6c] hover:text-white transition-all duration-300 px-3 py-2 rounded-lg font-medium"
                                 >
                                     유튜브에서 영상 보기
-                                </a>
+                                </Link>
                             </div>
                         </div>
 
@@ -250,14 +251,14 @@ const Detail = ({
 
                             {/* link section */}
                             <div className="w-4/12 flex justify-end items-center">
-                                <a
-                                    href={`https://www.youtube.com/channel/${selectedVideo?.channelId}`}
+                                <Link
+                                    to={`https://www.youtube.com/channel/${selectedVideo?.channelId}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="border border-[#3aad6c] bg-white text-[#3aad6c] text-base hover:bg-[#3aad6c] hover:text-white transition-all duration-300 px-3 py-2 rounded-lg font-medium"
                                 >
                                     유튜브에서 채널 보기
-                                </a>
+                                </Link>
                             </div>
                         </div>
 

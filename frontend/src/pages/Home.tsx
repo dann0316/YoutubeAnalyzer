@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Buttons from "../components/Buttons";
-import Card from "../components/Card";
+import Buttons from "@/components/viewui/Buttons";
+import Card from "@/components/viewui/Card";
 import type { HomePropsType, VideosType } from "../types/youtube.type";
-import Detail from "./Detail";
+import Detail from "../components/pageui/Detail";
 
 const Home: React.FC<HomePropsType> = ({
   error,
@@ -23,7 +23,6 @@ const Home: React.FC<HomePropsType> = ({
 
       <div className="flex flex-col justify-center items-center gap-5 border border-[#3aad6c] rounded-3xl p-5">
         <Buttons videos={videos} setVideos={setVideos} />
-
         <div className="w-full flex flex-row justify-between items-center gap-1">
           {
             titleArr.map((a,i) => (
@@ -54,7 +53,7 @@ const Home: React.FC<HomePropsType> = ({
 
         {nextPageToken && (
           <button onClick={() => fetchVideos(true)} className="btn">
-            load more
+            Load More
           </button>
         )}
       </div>

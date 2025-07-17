@@ -8,17 +8,25 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import type { LoginFormType } from '@/types/youtube.type'
 
-const Login = ({ setLoginModal }) => {
+const Login = ({
+    setLoginModal,
+}: {
+    setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
     const {
         register, // 폼에 등록
         handleSubmit, // 제출 함수
         formState: { errors }, // 에러 정보
-    } = useForm();
+    } = useForm<LoginFormType>();
 
-    const onSubmit = (data: any) => {
+    const onSubmit = (data: LoginFormType) => {
         console.log("폼 제출됨:", data);
     };
+
+    const navigate = useNavigate();
 
     return (
         <main
@@ -41,16 +49,22 @@ const Login = ({ setLoginModal }) => {
                     <div className="w-2/3 text-left">
                         <CardTitle>
                             <h3 className="text-lg font-semibold text-black">
-                                Login to your account
+                                Signin to your account
                             </h3>
                         </CardTitle>
                         <CardDescription className="text-base text-[#9CA2A0]">
-                            Enter your email below to login to your account
+                            Enter your email below to signin to your account
                         </CardDescription>
                     </div>
                     <div className="w-1/3 text-right">
-                        <button className="text-lg font-semibold text-black underline transition-all duration-300 hover:text-[#868686]">
-                            Sign Up
+                        <button
+                            className="text-lg font-semibold text-black underline transition-all duration-300 hover:text-[#868686]"
+                            onClick={() => {
+                                setLoginModal(false);
+                                navigate("/signup");
+                            }}
+                        >
+                            SignUp
                         </button>
                     </div>
                 </CardHeader>
@@ -71,34 +85,44 @@ const Login = ({ setLoginModal }) => {
                                     message: "이메일 형식이 올바르지 않아요",
                                 },
                             })}
-                            placeholder="이메일"
+                            placeholder="E-mail"
                         />
                         {errors.email && (
                             <p>{errors.email.message as string}</p>
                         )}
 
-                        <h3 className="font-semibold">Password</h3>
+                        <div className="w-full flex flex-row justify-between items-center">
+                            <h3 className="font-semibold">Password</h3>
+
+                            <h3
+                                className="font-normal text-black transition-all duration-300 hover:text-[#868686] cursor-pointer"
+                                onClick={() => {}}
+                            >
+                                Forgot Password?
+                            </h3>
+                        </div>
                         <input
                             className="w-full h-8 rounded-lg border border-[#c9cecc] p-2"
                             {...register("password", {
                                 required: "비밀번호는 필수입니다",
                             })}
-                            placeholder="비밀번호"
+                            placeholder="Password"
                         />
                         {errors.username && (
-                            <p>{errors.username.message as string}</p>
+                            <p>{errors.username.message}</p>
                         )}
                     </form>
                 </CardContent>
+
                 <CardFooter className="w-full flex flex-col gap-1">
                     <button className="w-full btn" type="submit">
-                        Login
+                        SignIn
                     </button>
-                    
-                    <hr className="border border-gray-400 my-5 w-full"/>
+
+                    <hr className="border border-gray-400 my-5 w-full" />
 
                     <button
-                        className="w-full text-base text-white bg-black font-bold border border-black rounded-2xl transition-all duration-300 hover:text-[#3aad6c] hover:bg-white p-2"
+                        className="w-full text-base text-white bg-black font-bold border border-black rounded-2xl transition-all duration-300 hover:text-black hover:bg-white p-2"
                         type="submit"
                     >
                         Login with Google
