@@ -31,3 +31,9 @@ export interface storeType {
     keyword: string
     setKeyword: React.Dispatch<React.SetStateAction<string>>
 }
+
+export interface LoginFormType {
+    email: string;
+    password: string;
+    username: string;
+}

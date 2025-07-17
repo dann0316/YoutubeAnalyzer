@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Header from "./components/Header";
+import Header from "./components/layoutui/Header";
 import "./App.css";
 // import Detail from "./pages/Detail";
 import { useYoutubeData } from "./hooks/useYoutubeData";
 import { useAutoCompleteData } from "./hooks/useAutoCompleteData";
 import { useStore } from "./stores/store";
+import SignUp from "./pages/SignUp";
 
 function App() {
     
@@ -63,6 +64,13 @@ function App() {
                             fetchVideos={fetchVideos}
                             nextPageToken={nextPageToken}
                             setVideos={setVideos}
+                        />
+                    }
+                />
+                <Route
+                    path="/signup"
+                    element={
+                        <SignUp
                         />
                     }
                 />
