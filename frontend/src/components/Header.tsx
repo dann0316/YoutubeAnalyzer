@@ -1,5 +1,6 @@
-import type { ReactEventHandler } from "react";
+import { useState, type ReactEventHandler } from "react";
 import { FaSearch } from "react-icons/fa";
+import Login from "../pages/Login";
 
 type HeaderPropsType = {
     keyword: string;
@@ -10,20 +11,44 @@ type HeaderPropsType = {
     selectedIndex: number;
     setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
     setKeyword: React.Dispatch<React.SetStateAction<string>>;
-    setSuggestions: React.Dispatch<React.SetStateAction<string[]>>
+    setSuggestions: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const Header: React.FC<HeaderPropsType> = ({ keyword, fetchSuggestions, handleKeyDown, fetchVideos, suggestions, setSelectedIndex, selectedIndex, setKeyword, setSuggestions }) => {
+const Header: React.FC<HeaderPropsType> = ({
+    keyword,
+    fetchSuggestions,
+    handleKeyDown,
+    fetchVideos,
+    suggestions,
+    setSelectedIndex,
+    selectedIndex,
+    setKeyword,
+    setSuggestions,
+}) => {
+
+    const [loginModal, setLoginModal] = useState(false);
 
     return (
         <header className="fixed top-0 left-0 w-full h-20 bg-white border-b border-[#3aad6c] flex justify-between items-center px-6 z-10">
-
             {/* 왼쪽 제목 */}
-            <h3 className="text-3xl font-bold text-[#3aad6c]">Youtube Analyzer</h3>
+            <h3 className="text-3xl font-bold text-[#3aad6c]">
+                Youtube Analyzer
+            </h3>
+
+            {/* 가운데 로그인, 회원가입 */}
+            <div className="flex flex-row justify-center items-center gap-10">
+                <button className="text-[#3aad6c] font-bold hover:underline transition-all duration-300" onClick={() => {
+                    setLoginModal(true);
+                }}>
+                    로그인
+                </button>
+                {
+                    loginModal && <Login setLoginModal = {setLoginModal}/>
+                }
+            </div>
 
             {/* 오른쪽 검색창 */}
             <div className="relative">
-                
                 <div className="flex flex-row justify-between items-center bg-[#3aad6c] rounded-xl">
                     <input
                         type="text"
@@ -41,7 +66,6 @@ const Header: React.FC<HeaderPropsType> = ({ keyword, fetchSuggestions, handleKe
                     >
                         <FaSearch />
                     </button>
-                    
                 </div>
 
                 {/* ✅ 자동완성 목록 */}
@@ -72,11 +96,11 @@ const Header: React.FC<HeaderPropsType> = ({ keyword, fetchSuggestions, handleKe
                             ))}
                         </ul>
                     )}
-                    </div>
-
+                </div>
             </div>
+
         </header>
-    )
-}
+    );
+};
 
 export default Header;

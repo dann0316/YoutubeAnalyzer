@@ -3,8 +3,7 @@
 }
 
 .btn {
-    @apply text-base text-[#3aad6c] font-bold border border-[#3aad6c] p-3 rounded-2xl transition-all duration-300 hover:text-white hover:bg-[#3aad6c]
-    uppercase;
+    @apply text-base text-[#3aad6c] font-bold border border-[#3aad6c] p-3 rounded-2xl transition-all duration-300 hover:text-white hover:bg-[#3aad6c];
 }
 
 #radix-«rf»-trigger-video, #radix-«rf»-trigger-channel {

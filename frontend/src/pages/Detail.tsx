@@ -3,6 +3,7 @@ import type { VideosType } from "../types/youtube.type";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InfoCard from "../components/InfoCard";
 import ViewsByChart from "../components/viewsByChart";
+import { FaTimes } from 'react-icons/fa';
 
 const Detail = ({
     selectedVideo,
@@ -122,9 +123,9 @@ const Detail = ({
                     onClick={() => {
                         setModal(false);
                     }}
-                    className="absolute top-1 right-5 text-3xl font-light text-white"
+                    className="absolute top-2 right-2 text-xl font-light text-[#3aad6c]"
                 >
-                    x
+                    <FaTimes />
                 </button>
                 <Tabs
                     defaultValue="video"
@@ -287,7 +288,9 @@ const Detail = ({
                             <InfoCard
                                 className="w-1/3"
                                 cardTitle="채널 개설일"
-                                cardContent={channelDate}
+                                cardContent={new Date(
+                                            channelDate
+                                        ).toLocaleDateString()}
                             />
                         </div>
 
