@@ -9,7 +9,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import type { LoginFormType } from '@/types/youtube.type'
+import type { FormType } from '@/types/youtube.type'
 
 const Login = ({
     setLoginModal,
@@ -20,9 +20,9 @@ const Login = ({
         register, // 폼에 등록
         handleSubmit, // 제출 함수
         formState: { errors }, // 에러 정보
-    } = useForm<LoginFormType>();
+    } = useForm<FormType>();
 
-    const onSubmit = (data: LoginFormType) => {
+    const onSubmit = (data: FormType) => {
         console.log("폼 제출됨:", data);
     };
 
