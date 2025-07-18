@@ -213,6 +213,7 @@ app.get("/api/channel", (req, res) => __awaiter(void 0, void 0, void 0, function
                 part: "snippet,statistics",
                 id: channelId,
                 key: process.env.YOUTUBE_API_KEY,
+                // 이걸 그냥 snippect.channelId 이렇게 써도 되는거잖아
             },
         });
         const items = response.data.items;
