@@ -1,9 +1,5 @@
-.container {
-    @apply w-full h-auto flex flex-col justify-center items-center pt-24 pb-14;
-}
-
 .btn {
-    @apply text-base text-[#3aad6c] font-bold border border-[#3aad6c] p-3 rounded-2xl transition-all duration-300 hover:text-white hover:bg-[#3aad6c];
+    @apply text-base text-primary font-bold border border-primary p-3 rounded-2xl transition-all duration-300 hover:text-white hover:bg-primary;
 }
 
 #radix-«rf»-trigger-video, #radix-«rf»-trigger-channel {

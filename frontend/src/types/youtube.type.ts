@@ -36,6 +36,5 @@ export interface FormType {
     id:string;
     email: string;
     password: string;
-    username: string;
-    error: string | null;
+    nickname: string;
 }

@@ -13,18 +13,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const firebase_admin_1 = __importDefault(require("firebase-admin"));
+const firebaseAdmin_1 = __importDefault(require("../utils/firebaseAdmin"));
 const app = (0, express_1.default)();
+const cors = require("cors");
 const PORT = 3001;
 app.use(express_1.default.json());
+app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // 프론트 주소만 허용
+    credentials: true, // 필요하면 쿠키 인증 허용
+}));
 app.post('/api/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { uid, id } = req.body;
+    const { uid, email, nickname } = req.body;
+    console.log("📦 받은 요청 body:", req.body);
     try {
-        const user = yield firebase_admin_1.default.auth().getUser(uid);
-        console.log('Firebase Auth에 이미 있는 유저:', user.email);
-        // 선택: Firestore 저장 등
-        // await admin.firestore().collection('users').doc(uid).set({ email });
-        res.status(200).json({ message: '유저 확인 완료', email: user.email });
+        const user = yield firebaseAdmin_1.default.auth().getUser(uid);
+        console.log('Firebase Auth에 저장됨 유저 이메일:', user.email);
+        const userDoc = firebaseAdmin_1.default.firestore().collection('users').doc('savedUser');
+        // 이렇게 하면 바로 실행인가?
+        yield userDoc.set({
+            createdAt: new Date().toISOString(), // 문자열로 저장
+            email: `${user.email}`,
+            nickname: `${nickname}`, // Timestamp 객체로 저장
+            point: 0,
+            role: `${user.email === "cdl2141@gmail.com" ? "admin" : "user"}`,
+            uid: `${uid}`,
+        });
+        res.status(200).json({ message: '유저 저장 완료', email: user.email });
     }
     catch (error) {
         console.error('유저 조회 실패:', error.message);
