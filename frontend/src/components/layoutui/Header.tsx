@@ -32,7 +32,7 @@ const Header: React.FC<HeaderPropsType> = ({
     const navigate = useNavigate();
 
     return (
-        <header className="fixed top-0 left-0 w-full h-20 bg-white border-b border-primary flex justify-between items-center px-10 z-10">
+        <header className="fixed top-0 left-0 w-full h-20 bg-gray-50 border-b border-primary flex justify-between items-center px-10 z-10 shadow-md">
             {/* 왼쪽 제목 */}
             <div className="w-1/3 flex flex-row justify-start items-center">
                 <div
@@ -47,7 +47,7 @@ const Header: React.FC<HeaderPropsType> = ({
 
             {/* 가운데 검색창 */}
             <div className="w-1/3 relative flex flex-row justify-center items-center">
-                <div className="w-1/2 flex flex-row justify-between items-center bg-primary rounded-lg p-2 gap-2">
+                <div className="group w-2/3 flex flex-row justify-between items-center bg-primary rounded-lg p-2 gap-2 group-focus-within:bg-blue-500 transition-all duration-300">
                     <input
                         type="text"
                         placeholder="검색할 키워드"

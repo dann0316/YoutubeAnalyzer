@@ -14,7 +14,7 @@ export interface VideosType {
     // setModal:
 }
 
-export interface HomePropsType {
+export interface ListPropsType {
     error: Error | null;
     videos: VideosType[];
     setVideos: React.Dispatch<React.SetStateAction<VideosType[]>>;

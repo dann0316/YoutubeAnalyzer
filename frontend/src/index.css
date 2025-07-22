@@ -14,6 +14,10 @@ html *, body * {
   font-display: swap;
 }
 
+html input:focus, body input:focus {
+  outline: none;
+}
+
 
 
 @layer base {

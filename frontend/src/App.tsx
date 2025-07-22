@@ -2,11 +2,11 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Header from "./components/layoutui/Header";
 import "./App.css";
-// import Detail from "./pages/Detail";
 import { useYoutubeData } from "./hooks/useYoutubeData";
 import { useAutoCompleteData } from "./hooks/useAutoCompleteData";
 import { useStore } from "./stores/store";
 import SignUp from "./pages/SignUp";
+import List from "@/pages/List";
 
 function App() {
     
@@ -40,7 +40,7 @@ function App() {
     };
 
     return (
-        <div className="w-screen h-auto">
+        <div>
             <Header
                 keyword={keyword}
                 fetchSuggestions={fetchSuggestions}
@@ -54,10 +54,11 @@ function App() {
             />
 
             <Routes>
+                <Route path="/" element={<Home />} />
                 <Route
-                    path="/"
+                    path="/list"
                     element={
-                        <Home
+                        <List
                             error={error}
                             videos={videos}
                             getPerformanceLabel={getPerformanceLabel}

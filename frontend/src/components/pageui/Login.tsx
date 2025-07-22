@@ -108,8 +108,8 @@ const Login = ({
                             })}
                             placeholder="Password"
                         />
-                        {errors.username && (
-                            <p>{errors.username.message}</p>
+                        {errors.nickname && (
+                            <p>{errors.nickname.message}</p>
                         )}
                     </form>
                 </CardContent>

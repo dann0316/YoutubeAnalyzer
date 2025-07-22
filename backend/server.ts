@@ -304,6 +304,38 @@ app.get("/api/channel", async (req: Request, res: Response) => {
     }
 });
 
+// google trend에서 가져오기 (디버깅 로그까지 추가)
+
+
+// 뉴스 검색 API
+app.get("/api/news", async (req: Request, res: Response) => {
+    const { query } = req.query;
+
+    if (!query || typeof query !== "string") {
+        return res.status(400).json({ message: "검색어(query)를 query string으로 전달해야 합니다." });
+    }
+
+    try {
+        const response = await axios.get("https://openapi.naver.com/v1/search/news.json", {
+            params: {
+                query: query,
+                display: 10,   // 10개씩 가져오기
+                start: 1,      // 1페이지부터
+                sort: "date"   // 최신순: date | 정확도순: sim
+            },
+            headers: {
+                "X-Naver-Client-Id": process.env.NAVER_CLIENT_ID!,
+                "X-Naver-Client-Secret": process.env.NAVER_CLIENT_SECRET!
+            }
+        });
+
+        res.status(200).json(response.data);
+    } catch (err: any) {
+        console.error(err.message);
+        res.status(500).json({ message: "네이버 뉴스 API 호출 실패", error: err.message });
+    }
+});
+
 // ✅ 서버 실행
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`서버 실행 중: ${PORT}`);

@@ -1,106 +1,87 @@
+import MainLayout from "@/components/layoutui/MainLayout";
 import { useState } from "react";
-import Card from "@/components/viewui/Card";
-import type { HomePropsType, VideosType } from "../types/youtube.type";
-import Detail from "../components/pageui/Detail";
 
-const Home: React.FC<HomePropsType> = ({
-    error,
-    videos,
-    getPerformanceLabel,
-    fetchVideos,
-    nextPageToken,
-    setVideos,
-}) => {
-    const [modal, setModal] = useState(null);
-    const [selectedVideo, setSelectedVideo] = useState<VideosType | null>(null);
+const Home = () => {
+    const [news, setNews] = useState<string[] | any[]>([]);
+    const [newsQuery, setNewsQuery] = useState<string>("");
 
-    const titleArr = [
-        "썸네일",
-        "영상 제목",
-        "조회수",
-        "채널 구독자 수",
-        "성과도",
-        "게시일",
-    ];
+    // const [trendKeyword, setTrendKeyword] = useState<string>("");
 
-    const sortByViews = () => {
-        const copy = [...videos];
-        copy.sort((a, b) => b.views - a.views);
-        setVideos(copy);
+    const fetchTrend = async (input: string) => {
+        if (!input.trim()) return;
+
+        try {
+            const response = await fetch(
+                `http://localhost:3000/api/news?query=${input}`
+            );
+            const data = await response.json();
+            // .json()가 뭐지 response를 json으로 만들어주는 건가
+            // 외부 api에 보낼 때 뭘 어떻게 보낼지를 잘 봐야되고 header랑 body
+            // 거기서 온 응답도 뭘 어떻게 받고 잘 봐야함  header랑 body
+            setNews(data.items);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    const sortByViewsReverse = () => {
-        const copy = [...videos];
-        copy.sort((a, b) => a.views - b.views);
-        setVideos(copy);
-    };
+    // useEffect(() => {
+    //     fetchTrend(newsQuery);
+    // }, [newsQuery]);
 
     return (
-        <main className="w-full min-h-screen p-24">
-            {error && <p> 오류: {error ? error.message : null}</p>}
-
-            <div className="flex flex-col justify-center items-center gap-5 border border-primary rounded-3xl p-5">
-
-                <div className="w-full flex flex-row justify-start items-center gap-2">
-                    <button className="btn" onClick={() => sortByViews()}>
-                        조회수 정렬
-                    </button>
-                    <button
-                        className="btn"
-                        onClick={() => sortByViewsReverse()}
-                    >
-                        조회수 역정렬
-                    </button>
-                </div>
-
-                <div className="w-full flex flex-row justify-between items-center gap-1">
-                    {titleArr.map((a, i) =>
-                        i === 1 ? (
-                            <div
-                                key={i}
-                                className="w-4/12 flex justify-center items-center border border-[#3aad6c] p-3 rounded-lg"
-                            >
-                                {a}
-                            </div>
-                        ) : (
-                            <div
-                                key={i}
-                                className="w-2/12 flex justify-center items-center border border-[#3aad6c] p-3 rounded-lg"
-                            >
-                                {a}
-                            </div>
-                        )
-                    )}
-                </div>
-
-                {videos.length > 0 ? (
-                    videos.map((video, index) => (
-                        <Card
-                            key={index}
-                            video={video}
-                            getPerformanceLabel={getPerformanceLabel}
-                            setModal={setModal}
-                            setSelectedVideo={setSelectedVideo}
-                        />
-                    ))
-                ) : (
-                    <p>검색 결과가 없습니다.</p>
-                )}
-
-                <Detail
-                    modal={modal}
-                    setModal={setModal}
-                    selectedVideo={selectedVideo}
-                    getPerformanceLabel={getPerformanceLabel}
-                />
-
-                {nextPageToken && (
-                    <button onClick={() => fetchVideos(true)} className="btn">
-                        Load More
-                    </button>
-                )}
+        <MainLayout>
+            <div className="w-full flex flex-col justify-center items-start gap-2">
+                <h3 className="text-2xl font-semibold text-black">
+                    안녕하세요! 👋
+                </h3>
+                <p className="text-base font-normal text-gray-500">
+                    오늘은 어떤 영상을 분석해볼까요?
+                </p>
             </div>
-        </main>
+
+            <div className="w-full flex flex-갲 justify-center items-center gap-5 border border-[#44cfa587] rounded-2xl p-5">
+                <div className="w-1/2 flex flex-col justify-center items-start gap-2 border border-[#44cfa54b] rounded-2xl p-5">
+                    <h3 className="text-xl font-semibold">
+                        현재 인기 키워드 🚀
+                    </h3>
+                    <div>
+                        {/* {trendKeyword} */}
+                    </div>
+                </div>
+
+                <div className="w-1/2 flex flex-col justify-center items-start gap-2 border border-[#44cfa54b] rounded-2xl p-5">
+                    <h3 className="text-xl font-semibold">현재 AI 뉴스 📰</h3>
+                    <input
+                        type="text"
+                        value={newsQuery}
+                        onChange={(e) => setNewsQuery(e.target.value)}
+                    />
+                    <button onClick={() => fetchTrend(newsQuery)}>검색</button>
+                    <ul>
+                        {news.map((item, idx) => (
+                            <li key={idx} className="border border-primary">
+                                <a
+                                    href={item.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    {item.title.replace(/<[^>]+>/g, "")}
+                                </a>
+                                {/* <p
+                                    dangerouslySetInnerHTML={{
+                                        __html: item.description,
+                                    }}
+                                /> */}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+
+            <div className="w-full flex flex-row justify-start items-center gap-5 border border-[#44cfa587] rounded-2xl p-5">
+                <h3 className="text-xl font-semibold">최근 본 영상 ⌛</h3>
+            </div>
+        </MainLayout>
     );
 };
 
