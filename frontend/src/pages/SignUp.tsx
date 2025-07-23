@@ -32,11 +32,11 @@ const SignUp = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     uid: user.uid,
-                    id: user.email,
+                    email: user.email,
+                    password: password,
                     nickname: nickname,
                 }),
             });
-
             alert("회원가입 성공!");
             navigate("/");
         } catch (error) {

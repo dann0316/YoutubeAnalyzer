@@ -24,20 +24,20 @@ app.use(cors({
     credentials: true, // 필요하면 쿠키 인증 허용
 }));
 app.post('/api/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { uid, email, nickname } = req.body;
+    const { uid, email, nickname, password } = req.body;
     console.log("📦 받은 요청 body:", req.body);
     try {
         const user = yield firebaseAdmin_1.default.auth().getUser(uid);
         console.log('Firebase Auth에 저장됨 유저 이메일:', user.email);
-        const userDoc = firebaseAdmin_1.default.firestore().collection('users').doc('savedUser');
+        const userDoc = firebaseAdmin_1.default.firestore().collection('users').doc(uid);
         // 이렇게 하면 바로 실행인가?
         yield userDoc.set({
             createdAt: new Date().toISOString(), // 문자열로 저장
             email: `${user.email}`,
-            nickname: `${nickname}`, // Timestamp 객체로 저장
-            point: 0,
+            nickname: `${nickname}`,
+            password: `${password}`,
             role: `${user.email === "cdl2141@gmail.com" ? "admin" : "user"}`,
-            uid: `${uid}`,
+            point: `${user.email === "cdl2141@gmail.com" ? 1000 : 0}`,
         });
         res.status(200).json({ message: '유저 저장 완료', email: user.email });
     }

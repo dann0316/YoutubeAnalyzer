@@ -304,7 +304,7 @@ app.get("/api/channel", async (req: Request, res: Response) => {
     }
 });
 
-// google trend에서 가져오기 (디버깅 로그까지 추가)
+
 
 
 // 뉴스 검색 API

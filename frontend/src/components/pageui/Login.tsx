@@ -9,9 +9,10 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import type { FormType } from '@/types/youtube.type'
+import type { FormType } from "@/types/youtube.type";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-const Login = ({
+const LogIn = ({
     setLoginModal,
 }: {
     setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,11 +20,29 @@ const Login = ({
     const {
         register, // 폼에 등록
         handleSubmit, // 제출 함수
-        formState: { errors }, // 에러 정보
+        formState: { errors, isSubmitting }, // 에러 정보
     } = useForm<FormType>();
 
-    const onSubmit = (data: FormType) => {
-        console.log("폼 제출됨:", data);
+    const auth = getAuth(); 
+
+
+    const onSignInSubmit = async ({ email, password }: FormType) => {
+        try {
+            const userCredential = await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            const user = userCredential.user;
+
+            const token = await user.getIdToken(); // 백엔드로 넘길 JWT
+            console.log(auth.currentUser);
+            console.log(token);
+            alert("로그인 성공");
+        } catch (err) {
+            alert("로그인 정보를 다시 확인해주세요!")
+            console.error(err);
+        }
     };
 
     const navigate = useNavigate();
@@ -71,7 +90,7 @@ const Login = ({
 
                 <CardContent className="w-full">
                     <form
-                        onSubmit={handleSubmit(onSubmit)}
+                        onSubmit={handleSubmit(onSignInSubmit)}
                         className="flex flex-col justify-center items-start gap-2"
                     >
                         <h3 className="font-semibold">E-mail</h3>
@@ -108,19 +127,20 @@ const Login = ({
                             })}
                             placeholder="Password"
                         />
-                        {errors.nickname && (
-                            <p>{errors.nickname.message}</p>
-                        )}
+                        {errors.nickname && <p>{errors.nickname.message}</p>}
+
+                        <button
+                            className="w-full btn"
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
+                            SignIn
+                        </button>
                     </form>
                 </CardContent>
-
+                
                 <CardFooter className="w-full flex flex-col gap-1">
-                    <button className="w-full btn" type="submit">
-                        SignIn
-                    </button>
-
-                    <hr className="border border-gray-400 my-5 w-full" />
-
+                <hr className="border border-gray-400 my-5 w-full" />
                     <button
                         className="w-full text-base text-white bg-black font-bold border border-black rounded-2xl transition-all duration-300 hover:text-black hover:bg-white p-2"
                         type="submit"
@@ -139,4 +159,4 @@ const Login = ({
     );
 };
 
-export default Login;
+export default LogIn;

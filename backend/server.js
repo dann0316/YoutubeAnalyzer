@@ -8,15 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const google_trends_api_1 = __importDefault(require("google-trends-api")); // @ts-ignore
 const app = express();
 const PORT = 3000;
 app.use(cors());
@@ -241,19 +237,6 @@ app.get("/api/channel", (req, res) => __awaiter(void 0, void 0, void 0, function
     catch (error) {
         console.error("YouTube API 요청 실패:", error.message);
         res.status(500).json({ error: "YouTube API 요청 실패" });
-    }
-}));
-// google trend에서 가져오기
-app.get("/api/trend", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield google_trends_api_1.default.dailyTrends({ geo: "KR" });
-        const data = JSON.parse(result);
-        const keywords = data.default.trendingSearchesDays[0].trendingSearches.map((item) => item.title.query);
-        res.json({ keywords });
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Google Trends 호출 실패" });
     }
 }));
 // 뉴스 검색 API
