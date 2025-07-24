@@ -7,6 +7,7 @@ import { useAutoCompleteData } from "./hooks/useAutoCompleteData";
 import { useStore } from "./stores/store";
 import SignUp from "./pages/SignUp";
 import List from "@/pages/List";
+import MyPage from "./pages/MyPage";
 
 function App() {
     
@@ -75,7 +76,13 @@ function App() {
                         />
                     }
                 />
-                {/* <Route path="/detail/:videoId" element={<Detail />} /> */}
+                <Route
+                    path="/mypage"
+                    element={
+                        <MyPage
+                        />
+                    }
+                />
             </Routes>
         </div>
     );

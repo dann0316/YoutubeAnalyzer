@@ -1,9 +1,68 @@
 import MainLayout from "@/components/layoutui/MainLayout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const MyPage = () => {
     return (
-        <MainLayout>
-            <div>hi</div>
+        <MainLayout gap={"gap-14"}>
+            <h3 className="text-2xl font-bold text-black">My Page</h3>
+            <Tabs
+                defaultValue="account"
+                className="border border-line w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden"
+            >
+                <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-line rounded-none">
+
+                    <div className="w-full h-3/5 flex flex-col justify-between items-center py-20 border-b border-line">
+
+                        {/* empty section */}
+                        <div>
+
+                        </div>
+
+                        {/* user information section */}
+                        <div className="text-black flex flex-col justify-center items-center gap-5">
+                            <div className="border border-black w-28 h-28 rounded-full ">
+                                <img src="" alt="" className="w-full h-full" />
+                            </div>
+                            <div className="flex flex-col  justify-center items-center ">
+                                <h3 className="text-xl font-semibold uppercase">nickname</h3>
+                                <p>user email</p>
+                            </div>
+                        </div>
+
+                        {/* trigger section */}
+                        <TabsTrigger
+                            value="account"
+                            className="border border-gray-600 bg-gray-600 text-white text-sm rounded-3xl hover:text-gray-600 hover:bg-white transition duration-300 ease-in-out data-[state=active]:bg-black data-[state=active]:text-white"
+                        >
+                            프로필 수정
+                        </TabsTrigger>
+                    </div>
+
+                    <div className="w-full h-2/5 flex flex-col justify-center items-center">
+                        <div className="flex flex-col justify-center items-start gap-3">
+                            <TabsTrigger value="videoManageMent" className="TabsTrigger">
+                                영상 관리
+                            </TabsTrigger>
+                            <TabsTrigger value="something" className="TabsTrigger">
+                                뭐 관리
+                            </TabsTrigger>
+                        </div>
+                    </div>
+
+                </TabsList>
+
+                <div className="w-5/6">
+                    <TabsContent value="account">
+                        account
+                    </TabsContent>
+                    <TabsContent value="videoManageMent">
+                        videoManageMent
+                    </TabsContent>
+                    <TabsContent value="something">
+                        something
+                    </TabsContent>
+                </div>
+            </Tabs>
         </MainLayout>
     );
 };

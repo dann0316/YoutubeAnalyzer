@@ -5,3 +5,7 @@
 #radix-«rf»-trigger-video, #radix-«rf»-trigger-channel {
     color: #3aad6c;
 }
+
+.TabsTrigger {
+    @apply text-base text-black hover:text-gray-500 transition duration-300 ease-in-out p-0 m-0 active:text-gray-400 data-[state=active]:text-gray-500;
+}

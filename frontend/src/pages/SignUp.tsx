@@ -4,8 +4,10 @@ import { auth } from "@/utils/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/layoutui/MainLayout";
+import LoadingSpinner from "@/components/viewui/LoadingSpinner";
 
 const SignUp = () => {
+
     const {
         register, // 폼에 등록
         handleSubmit, // 제출 함수
@@ -37,6 +39,7 @@ const SignUp = () => {
                     nickname: nickname,
                 }),
             });
+            
             alert("회원가입 성공!");
             navigate("/");
         } catch (error) {
@@ -50,7 +53,7 @@ const SignUp = () => {
     };
 
     return (
-        <MainLayout>
+        <MainLayout gap={"gap-14"}>
             
             <h3 className="text-2xl font-bold text-black">
                 Sign Up
@@ -58,8 +61,7 @@ const SignUp = () => {
 
             <form
                 className="w-1/3 flex flex-col justify-center items-center gap-7"
-                onSubmit={handleSubmit(onSignUpSubmit)}
-            >
+                onSubmit={handleSubmit(onSignUpSubmit)}>
                 {/* 이메일 section */}
                 <div className="w-full flex flex-col justify-center items-center gap-1">
                     <label className="font-semibold text-lg">이메일</label>
@@ -164,7 +166,7 @@ const SignUp = () => {
                     </div> */}
 
                 <button className="btn" type="submit" disabled={isSubmitting}>
-                    SignUp
+                    {isSubmitting ? <LoadingSpinner /> : "SignUp"}
                 </button>
             </form>
 
