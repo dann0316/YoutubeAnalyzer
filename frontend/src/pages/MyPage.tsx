@@ -11,31 +11,34 @@ const MyPage = () => {
             >
                 <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-line rounded-none">
 
-                    <div className="w-full h-3/5 flex flex-col justify-between items-center py-20 border-b border-line">
+                    <div className="w-full h-3/5 flex flex-col justify-center items-center border-b border-line">
+                        <div className="flex flex-col justify-center items-center gap-5">
 
-                        {/* empty section */}
-                        <div>
+                            {/* empty section */}
+                            <div>
 
-                        </div>
-
-                        {/* user information section */}
-                        <div className="text-black flex flex-col justify-center items-center gap-5">
-                            <div className="border border-black w-28 h-28 rounded-full ">
-                                <img src="" alt="" className="w-full h-full" />
                             </div>
-                            <div className="flex flex-col  justify-center items-center ">
-                                <h3 className="text-xl font-semibold uppercase">nickname</h3>
-                                <p>user email</p>
-                            </div>
-                        </div>
 
-                        {/* trigger section */}
-                        <TabsTrigger
-                            value="account"
-                            className="border border-gray-600 bg-gray-600 text-white text-sm rounded-3xl hover:text-gray-600 hover:bg-white transition duration-300 ease-in-out data-[state=active]:bg-black data-[state=active]:text-white"
-                        >
-                            프로필 수정
-                        </TabsTrigger>
+                            {/* user information section */}
+                            <div className="text-black flex flex-col justify-center items-center gap-5">
+                                <div className="border border-black w-28 h-28 rounded-full ">
+                                    <img src="" alt="" className="w-full h-full" />
+                                </div>
+                                <div className="flex flex-col  justify-center items-center ">
+                                    <h3 className="text-xl font-semibold uppercase">nickname</h3>
+                                    <p>user email</p>
+                                </div>
+                            </div>
+
+                            {/* trigger section */}
+                            <TabsTrigger
+                                value="account"
+                                className="border border-gray-600 bg-gray-600 text-white text-sm rounded-3xl hover:text-gray-600 hover:bg-white transition duration-300 ease-in-out data-[state=active]:bg-black data-[state=active]:text-white"
+                            >
+                                프로필 수정
+                            </TabsTrigger>
+                            
+                        </div>
                     </div>
 
                     <div className="w-full h-2/5 flex flex-col justify-center items-center">

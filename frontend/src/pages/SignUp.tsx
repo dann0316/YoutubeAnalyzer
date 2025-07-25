@@ -28,15 +28,15 @@ const SignUp = () => {
             );
             const user = userCredential.user;
 
-            // 2. 백엔드로 UID 전달 -> 백엔드에서는 Authentication에서 Firestore DB로 저장
+            // 2. 백엔드로 전달
             await fetch("http://localhost:3001/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    password: password,
-                    nickname: nickname,
+                    uid: user.uid, // 유저 확인용 uid
+                    password: password, // 유저 비밀번호 Authentication에 있는데 안보임
+                    nickname: nickname, // 유저 닉네임 Authentication에 없음
+                    // 어차피 이메일은 uid로 보면 Authentication에 있음
                 }),
             });
             

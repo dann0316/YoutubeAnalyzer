@@ -8,6 +8,7 @@ import { useStore } from "./stores/store";
 import SignUp from "./pages/SignUp";
 import List from "@/pages/List";
 import MyPage from "./pages/MyPage";
+import { useInitUser } from "./hooks/useInitUser";
 
 function App() {
     
@@ -39,6 +40,8 @@ function App() {
         if (score >= 41) return `Bad 👎 (${score})`;
         return `Worst ❌ (${score})`;
     };
+
+    useInitUser();
 
     return (
         <div>

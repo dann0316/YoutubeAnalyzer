@@ -33,8 +33,29 @@ export interface storeType {
 }
 
 export interface FormType {
-    id:string;
+    id: string;
     email: string;
     password: string;
     nickname: string;
+}
+
+export interface NewsItemsType {
+    title: string;
+    link: string;
+    description: string;
+}
+
+export interface UserStoreType {
+    uid: string;
+    email: string;
+    nickname: string;
+    point: string;
+    role: "user" | "admin" | ""; // 권한 미확인시 ""
+    setUser: (user: { 
+        uid: string;
+        email: string;
+        nickname: string;
+        point: string;
+        role: "user" | "admin"; }) => void;
+    clearUser: () => void;
 }

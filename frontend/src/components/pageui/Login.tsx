@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import type { FormType } from "@/types/youtube.type";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/utils/firebase";
 
 const LogIn = ({
     setLoginModal,
@@ -18,27 +19,48 @@ const LogIn = ({
     setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const {
-        register, // 폼에 등록
-        handleSubmit, // 제출 함수
-        formState: { errors, isSubmitting }, // 에러 정보
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
     } = useForm<FormType>();
-
-    const auth = getAuth(); 
-
 
     const onSignInSubmit = async ({ email, password }: FormType) => {
         try {
-            const userCredential = await signInWithEmailAndPassword(
+
+            await signInWithEmailAndPassword(
                 auth,
                 email,
                 password
             );
-            const user = userCredential.user;
 
-            const token = await user.getIdToken(); // 백엔드로 넘길 JWT
-            console.log(auth.currentUser);
-            console.log(token);
-            alert("로그인 성공");
+            alert('로그인 성공');
+            setLoginModal(false);
+
+            // // 이건 선언한건지 실행한건 아니지않나? 변수형 함수, 익명함수 그거여서 바로실행인가?
+            // const userCredential = await signInWithEmailAndPassword(
+            //     auth,
+            //     email,
+            //     password
+            // );
+            // const user = userCredential.user;
+
+            // const token = await user.getIdToken();
+            // // 우선 알림 띄우고
+            // alert("로그인 성공");
+
+            // // 토근 전달
+            // const response = await fetch("api/user-data", {
+            //     method: "POST",
+            //     headers : {
+            //         "token": `${token}`,
+            //         "Content-Type" : "application/json",
+            //     }
+            // });
+
+            // // 응답 받기
+            // // fetch의 결과는 Response 객체
+            // // 응답의 body를 json 형식으로 파싱
+            // const data = await response.json();
         } catch (err) {
             alert("로그인 정보를 다시 확인해주세요!")
             console.error(err);
@@ -52,7 +74,7 @@ const LogIn = ({
             className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center overflow-y-auto`}
         >
             <Card
-                className={`overflow-x-hidden overflow-y-auto w-1/3 h-7/12 max-h-7/12 border borde-white bg-[#eeeeee] rounded-3xl relative flex flex-col justify-center items-start gap-2`}
+                className={`overflow-x-hidden overflow-y-auto w-1/4 h-7/12 max-h-7/12 border borde-white bg-[#eeeeee] rounded-3xl relative flex flex-col justify-center items-start gap-2`}
             >
                 {/* 닫기 버튼 */}
                 <button
