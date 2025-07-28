@@ -22,14 +22,15 @@ export const useUserStore = create<UserStoreType>()(
             uid: "",
             email: "",
             nickname: "",
-            point: "",
+            point: 0,
             role: "",
             setUser: (user) => set(user),
+            setPoint: (value) => set({ point: value }),
             clearUser: () => set({
                 uid: "",
                 email: "",
                 nickname: "",
-                point: "",
+                point: 0,
                 role: "",
             })
         }),

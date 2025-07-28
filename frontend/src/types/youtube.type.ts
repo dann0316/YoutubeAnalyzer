@@ -49,13 +49,14 @@ export interface UserStoreType {
     uid: string;
     email: string;
     nickname: string;
-    point: string;
+    point: number;
     role: "user" | "admin" | ""; // 권한 미확인시 ""
     setUser: (user: { 
         uid: string;
         email: string;
         nickname: string;
-        point: string;
+        point: number;
         role: "user" | "admin"; }) => void;
     clearUser: () => void;
+    setPoint: (value: number) => void;
 }

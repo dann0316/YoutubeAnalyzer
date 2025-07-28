@@ -19,7 +19,7 @@ const List: React.FC<ListPropsType> = ({
         "썸네일",
         "영상 제목",
         "조회수",
-        "채널 구독자 수",
+        "기여도",
         "성과도",
         "게시일",
     ];
@@ -49,23 +49,27 @@ const List: React.FC<ListPropsType> = ({
             </div>
 
             <div className="w-full flex flex-row justify-between items-center gap-1">
-                {titleArr.map((a, i) =>
-                    i === 1 ? (
+                {titleArr.map((a, i) => {
+                    let widthClass = "w-2/12";
+
+                    if (i === 1) widthClass = "w-4/12";
+
+                    const des =
+                        "채널의 성장에 극적으로 기여한 정보를 수치화 한것으로 기여도가 높은 영상일수록 채널을 성장 시킬 잠재력이 있는 주제를 다룬 영상입니다.";
+
+                    const des2 =
+                        "채널에 있는 영상이 알림과 같은 구독자 기반의 노출과 관계 없이 자체성과를 올릴 경우 성과도가 높게 나타납니다.";
+
+                    return (
                         <div
                             key={i}
-                            className="w-4/12 flex justify-center items-center border border-[#3aad6c] p-3 rounded-lg"
+                            className={`${widthClass} flex justify-center items-center border border-[#3aad6c] p-3 rounded-lg`}
+                            title={i === 3 ? des : i === 4 ? des2 : ""}
                         >
                             {a}
                         </div>
-                    ) : (
-                        <div
-                            key={i}
-                            className="w-2/12 flex justify-center items-center border border-[#3aad6c] p-3 rounded-lg"
-                        >
-                            {a}
-                        </div>
-                    )
-                )}
+                    );
+                })}
             </div>
 
             {videos.length > 0 ? (

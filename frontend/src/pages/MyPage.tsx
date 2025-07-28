@@ -1,7 +1,11 @@
 import MainLayout from "@/components/layoutui/MainLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useUserStore } from "@/stores/store";
 
 const MyPage = () => {
+
+    const { nickname, point, role, email} = useUserStore();
+
     return (
         <MainLayout gap={"gap-14"}>
             <h3 className="text-2xl font-bold text-black">My Page</h3>
@@ -22,11 +26,14 @@ const MyPage = () => {
                             {/* user information section */}
                             <div className="text-black flex flex-col justify-center items-center gap-5">
                                 <div className="border border-black w-28 h-28 rounded-full ">
-                                    <img src="" alt="" className="w-full h-full" />
+                                    {/* <img src="" alt="" className="w-full h-full" /> */}
                                 </div>
                                 <div className="flex flex-col  justify-center items-center ">
-                                    <h3 className="text-xl font-semibold uppercase">nickname</h3>
-                                    <p>user email</p>
+                                    <h3 className="text-xl font-semibold">
+                                        {nickname} ({role})
+                                    </h3>
+                                    <p>{email}</p>
+                                    <p>point: {point}</p>
                                 </div>
                             </div>
 
@@ -55,8 +62,12 @@ const MyPage = () => {
                 </TabsList>
 
                 <div className="w-5/6">
-                    <TabsContent value="account">
-                        account
+                    <TabsContent value="account" className="flex flex-col justify-center items-center">
+                        <div>
+                            현재 포인트: {point}
+                        </div>
+                        <button className="btn">포인트 충전</button>
+
                     </TabsContent>
                     <TabsContent value="videoManageMent">
                         videoManageMent

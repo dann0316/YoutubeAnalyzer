@@ -9,16 +9,11 @@ import SignUp from "./pages/SignUp";
 import List from "@/pages/List";
 import MyPage from "./pages/MyPage";
 import { useInitUser } from "./hooks/useInitUser";
+import ProtectedRoute from "./components/authui/ProtectedRoute";
 
 function App() {
-    
-    const {
-        fetchVideos,
-        videos,
-        setVideos,
-        nextPageToken,
-        error,
-    } = useYoutubeData();
+    const { fetchVideos, videos, setVideos, nextPageToken, error } =
+        useYoutubeData();
 
     const {
         suggestions,
@@ -29,7 +24,7 @@ function App() {
         handleKeyDown,
     } = useAutoCompleteData();
 
-    const {keyword} = useStore();
+    const { keyword } = useStore();
     const setKeyword = useStore((state) => state.setKeyword);
 
     // 성과도 점수를 5단계로 변환하는 함수
@@ -62,28 +57,32 @@ function App() {
                 <Route
                     path="/list"
                     element={
-                        <List
-                            error={error}
-                            videos={videos}
-                            getPerformanceLabel={getPerformanceLabel}
-                            fetchVideos={fetchVideos}
-                            nextPageToken={nextPageToken}
-                            setVideos={setVideos}
-                        />
+                        <ProtectedRoute requireAuth={true}>
+                            <List
+                                error={error}
+                                videos={videos}
+                                getPerformanceLabel={getPerformanceLabel}
+                                fetchVideos={fetchVideos}
+                                nextPageToken={nextPageToken}
+                                setVideos={setVideos}
+                            />
+                        </ProtectedRoute>
                     }
                 />
                 <Route
                     path="/signup"
                     element={
-                        <SignUp
-                        />
+                        <ProtectedRoute requireAuth={false}>
+                            <SignUp />
+                        </ProtectedRoute>
                     }
                 />
                 <Route
                     path="/mypage"
                     element={
-                        <MyPage
-                        />
+                        <ProtectedRoute requireAuth={true}>
+                            <MyPage />
+                        </ProtectedRoute>
                     }
                 />
             </Routes>

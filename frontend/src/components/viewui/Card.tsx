@@ -1,4 +1,4 @@
-import type { VideosType } from "../types/youtube.type";
+import type { VideosType } from "@/types/youtube.type";
 
 const Card = ({
     video,
@@ -17,6 +17,7 @@ const Card = ({
                 setModal(true);
                 setSelectedVideo(video);
             }}
+            title={video.title}
         >
             <div className="w-2/12 rounded-2xl overflow-hidden">
                 <img
@@ -28,8 +29,8 @@ const Card = ({
             </div>
 
             <div className="w-4/12 flex justify-center items-center">
-                <h3 className="text-lg font-bold">
-                    {video.title}
+                <h3 className="text-base font-bold">
+                    {video.title.length > 20 ? video.title.slice(0,20)+"...": video.title}
                 </h3>
             </div>
 
