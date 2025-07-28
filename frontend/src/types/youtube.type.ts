@@ -47,12 +47,14 @@ export interface NewsItemsType {
 
 export interface UserStoreType {
     uid: string;
+    token: string;
     email: string;
     nickname: string;
     point: number;
     role: "user" | "admin" | ""; // 권한 미확인시 ""
     setUser: (user: { 
         uid: string;
+        token: string;
         email: string;
         nickname: string;
         point: number;

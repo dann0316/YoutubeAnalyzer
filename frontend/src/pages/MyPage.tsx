@@ -1,10 +1,30 @@
 import MainLayout from "@/components/layoutui/MainLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserStore } from "@/stores/store";
+import type { VideosType } from "@/types/youtube.type";
+import { useEffect, useState } from "react";
 
 const MyPage = () => {
+    const { nickname, point, role, email } = useUserStore();
 
-    const { nickname, point, role, email} = useUserStore();
+    const { token } = useUserStore();
+    const [myVideos, setMyVideos] = useState<VideosType[]>([]);
+
+    const fetchMyVideos = async () => {
+        const response = await fetch("http://localhost:3001/api/videosinfo", {
+            method: "POST",
+            headers: {
+                token: token,
+            },
+        });
+        const data = await response.json();
+
+        setMyVideos(data.videos);
+    };
+
+    useEffect(() => {
+        fetchMyVideos();
+    }, []);
 
     return (
         <MainLayout gap={"gap-14"}>
@@ -14,14 +34,10 @@ const MyPage = () => {
                 className="border border-line w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden"
             >
                 <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-line rounded-none">
-
                     <div className="w-full h-3/5 flex flex-col justify-center items-center border-b border-line">
                         <div className="flex flex-col justify-center items-center gap-5">
-
                             {/* empty section */}
-                            <div>
-
-                            </div>
+                            <div></div>
 
                             {/* user information section */}
                             <div className="text-black flex flex-col justify-center items-center gap-5">
@@ -44,37 +60,60 @@ const MyPage = () => {
                             >
                                 프로필 수정
                             </TabsTrigger>
-                            
                         </div>
                     </div>
 
                     <div className="w-full h-2/5 flex flex-col justify-center items-center">
                         <div className="flex flex-col justify-center items-start gap-3">
-                            <TabsTrigger value="videoManageMent" className="TabsTrigger">
+                            <TabsTrigger
+                                value="videoManageMent"
+                                className="TabsTrigger"
+                            >
                                 영상 관리
                             </TabsTrigger>
-                            <TabsTrigger value="something" className="TabsTrigger">
+                            <TabsTrigger
+                                value="something"
+                                className="TabsTrigger"
+                            >
                                 뭐 관리
                             </TabsTrigger>
                         </div>
                     </div>
-
                 </TabsList>
 
                 <div className="w-5/6">
-                    <TabsContent value="account" className="flex flex-col justify-center items-center">
-                        <div>
-                            현재 포인트: {point}
-                        </div>
+                    <TabsContent
+                        value="account"
+                        className="flex flex-col justify-center items-center"
+                    >
+                        <div>현재 포인트: {point}</div>
                         <button className="btn">포인트 충전</button>
-
                     </TabsContent>
-                    <TabsContent value="videoManageMent">
-                        videoManageMent
+                    <TabsContent
+                        value="videoManageMent"
+                        className="grid grid-cols-3 grid-rows-3 p-2 gap-2 w-full"
+                    >
+                        {myVideos.map((video, i) => (
+                            <div key={i} className="w-full flex flex-col border border-primary justify-center items-center gap-3 rounded-xl">
+                                <div className="w-60 rounded-2xl overflow-hidden flex justify-center items-center">
+                                    <img
+                                        src={video.thumbnail}
+                                        loading="lazy"
+                                        alt="썸네일"
+                                        className="w-full"
+                                    />
+                                </div>
+                                <div className="w-full flex justify-center items-center">
+                                    <h3 className="text-base font-bold">
+                                        {video.title.length > 20
+                                            ? video.title.slice(0, 20) + "..."
+                                            : video.title}
+                                    </h3>
+                                </div>
+                            </div>
+                        ))}
                     </TabsContent>
-                    <TabsContent value="something">
-                        something
-                    </TabsContent>
+                    <TabsContent value="something">something</TabsContent>
                 </div>
             </Tabs>
         </MainLayout>

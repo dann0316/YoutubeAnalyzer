@@ -16,7 +16,7 @@ interface RegisterRequestBody {
     email: string;
     nickname: string;
     password: string;
-    point:number;
+    point: number;
 }
 
 app.post('/api/register', async (req: Request<{}, {}, RegisterRequestBody>, res: Response) => {
@@ -69,7 +69,7 @@ app.post('/api/user-data', async (req: Request, res: Response): Promise<void> =>
         if (!userDoc.exists) {
             res.status(404).json({ message: 'User not found' });
         }
-        
+
         // 있으면 정보 front에 전달
         res.status(200).json(userDoc.data());
     } catch (err) {
@@ -77,5 +77,85 @@ app.post('/api/user-data', async (req: Request, res: Response): Promise<void> =>
         res.status(401).json({ message: 'Invalid token' });
     }
 });
+
+app.post('/api/videos', async (req: Request, res: Response): Promise<void> => {
+    const token = req.headers['token'];
+    const newVideos = req.body; // 새로 들어온 영상 배열
+
+    if (!token || typeof token !== 'string') {
+        res.status(401).json({ message: '토큰 전달 안됨' });
+        return;
+    }
+
+    try {
+        // 토큰 검증
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const uid = decodedToken.uid;
+
+        const userVideoDocRef = admin.firestore().collection('videos').doc(`videos_${uid}`);
+        const docSnapshot = await userVideoDocRef.get();
+
+        let existingVideos: any[] = [];
+
+        if (docSnapshot.exists) {
+            const data = docSnapshot.data();
+            existingVideos = data?.videos || [];
+        }
+
+        // 기존 videoId 목록
+        const existingIds = new Set(existingVideos.map((v: any) => v.id));
+
+        // 중복되지 않는 새 영상만 필터링
+        const uniqueNewVideos = newVideos.filter((v: any) => !existingIds.has(v.id));
+
+        if (uniqueNewVideos.length === 0) {
+            res.status(200).json({ message: '중복된 영상이므로 추가할 게 없음' });
+        }
+
+        // 기존 + 새 영상 합치기
+        const updatedVideos = [...existingVideos, ...uniqueNewVideos];
+
+        // 병합 저장
+        await userVideoDocRef.set(
+            { videos: updatedVideos },
+            { merge: true }
+        );
+
+        res.status(200).json({ message: `${uniqueNewVideos.length}개의 새로운 영상 추가 완료` });
+
+    } catch (error: any) {
+        console.error('영상 수집 실패:', error.message);
+        res.status(400).json({ error: '영상 수집 실패' });
+    }
+});
+
+app.post('/api/videosinfo', async (req: Request, res: Response) => {
+    const token = req.headers['token'];
+
+    if (!token || typeof token !== 'string') {
+        res.status(401).json({ message: '토큰 전달 안됨' });
+        return;
+    }
+
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const uid = decodedToken.uid;
+
+        const userVideoDocRef = admin.firestore().collection('videos').doc(`videos_${uid}`);
+        const docSnapshot = await userVideoDocRef.get();
+
+        if (!docSnapshot.exists) {
+            res.status(404).json({ message: '영상 정보가 없습니다' });
+            return;
+        }
+
+        const videoData = docSnapshot.data();
+        res.status(200).json({ videos: videoData?.videos || [] });
+    } catch (error: any) {
+        console.error('영상 정보 조회 실패:', error.message);
+        res.status(400).json({ message: '영상 정보 조회 실패' });
+    }
+});
+
 
 app.listen(PORT, () => { console.log(`서버 실행 중: ${PORT}`) });

@@ -20,6 +20,7 @@ export const useUserStore = create<UserStoreType>()(
     persist(
         (set) => ({
             uid: "",
+            token: "",
             email: "",
             nickname: "",
             point: 0,
@@ -28,6 +29,7 @@ export const useUserStore = create<UserStoreType>()(
             setPoint: (value) => set({ point: value }),
             clearUser: () => set({
                 uid: "",
+                token: "",
                 email: "",
                 nickname: "",
                 point: 0,

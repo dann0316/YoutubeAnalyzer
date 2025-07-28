@@ -22,6 +22,7 @@ export const useInitUser = () => {
                 useUserStore.getState().setUser({
                     uid: user.uid,
                     email: user.email ?? "",
+                    token,
                     nickname,
                     point,
                     role,
