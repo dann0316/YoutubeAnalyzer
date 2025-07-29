@@ -213,7 +213,7 @@ const Detail = ({
                                     cardTitle="댓글"
                                     cardContent={selectedVideo?.comments}
                                 />
-                                <InfoCard cardTitle="성과도" cardContent={""} />
+                                <InfoCard cardTitle="성과도" cardContent={selectedVideo?.videoId} />
                             </div>
                         </div>
 

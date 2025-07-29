@@ -45,7 +45,7 @@ export const useUserStore = create<UserStoreType>()(
         }),
         {
             name: "user",
-            partialize: (state) => ({ uid: state.uid, email: state.email, role: state.role, nickname: state.nickname, point: state.point }),
+            partialize: (state) => ({ uid: state.uid, email: state.email, role: state.role, nickname: state.nickname, point: state.point, token: state.token, }),
         }
     )
 );

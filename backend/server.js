@@ -13,9 +13,11 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const generative_ai_1 = require("@google/generative-ai");
 const app = express();
 const PORT = 3000;
 app.use(cors());
+app.use(express.json());
 // 영상 길이에 따른 예상 시청 지속율 계산 함수
 function getEstimatedWatchTimeRate(videoLength) {
     if (videoLength <= 180) {
@@ -265,7 +267,30 @@ app.get("/api/news", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: "네이버 뉴스 API 호출 실패", error: err.message });
     }
 }));
-// ✅ 서버 실행
+app.post('/api/generate-text', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    if (!geminiApiKey) {
+        console.error('GEMINI_API_KEY environment variable is not set.');
+        return res.status(500).json({ message: "API 키 문제" });
+    }
+    const genAI = new generative_ai_1.GoogleGenerativeAI(geminiApiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    try {
+        const { prompt } = req.body; // 프론트엔드에서 보낸 프롬프트
+        if (!prompt) {
+            return res.status(400).json({ error: 'Prompt is required.' });
+        }
+        const result = yield model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text(); // 생성된 텍스트
+        res.json({ text });
+    }
+    catch (error) {
+        console.error('Error calling Gemini API:', error instanceof Error ? error.message : error);
+        res.status(500).json({ error: 'Failed to generate content from Gemini API.' });
+    }
+}));
+// 서버 실행
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`서버 실행 중: ${PORT}`);
 });

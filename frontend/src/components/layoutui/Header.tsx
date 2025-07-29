@@ -39,12 +39,10 @@ const Header: React.FC<HeaderPropsType> = ({
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const token = await user.getIdToken();
-                console.log("로그인된 유저", user.email);
-                console.log("토큰", token);
                 setUser(user);
             } else {
                 setUser(null);
+                navigate('/');
             }
         });
 
@@ -148,7 +146,6 @@ const Header: React.FC<HeaderPropsType> = ({
                                     .catch((error) => {
                                         console.error("로그아웃 실패", error);
                                     });
-                                // then catch는 아무때나 붙여도 되나
                             }}
                         >
                             SignOut

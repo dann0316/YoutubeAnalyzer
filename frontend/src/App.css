@@ -1,5 +1,5 @@
 .btn {
-    @apply text-base text-primary font-bold border border-primary p-3 rounded-2xl transition-all duration-300 hover:text-white hover:bg-primary;
+    @apply text-base text-primary font-bold border border-primary p-3 rounded-2xl transition-all duration-300 hover:text-white hover:bg-primary whitespace-nowrap;
 }
 
 #radix-«rf»-trigger-video, #radix-«rf»-trigger-channel {

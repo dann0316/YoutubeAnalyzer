@@ -64,7 +64,7 @@ const Home = () => {
                                 <a
                                     href={item.link}
                                     target="_blank"
-                                    rel="noreferrer"
+                                    rel="noopener noreferrer"
                                 >
                                     {item.title.replace(/<[^>]+>/g, "").length > 30 ? item.title.replace(/<[^>]+>/g, "").slice(0,30) + '...' : item.title.replace(/<[^>]+>/g, "")}
                                 </a>

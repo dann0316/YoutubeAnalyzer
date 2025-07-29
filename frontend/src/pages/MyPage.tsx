@@ -4,17 +4,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserStore } from "@/stores/store";
 import type { VideosType } from "@/types/youtube.type";
 import { useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 
 const MyPage = () => {
     const { nickname, point, role, email } = useUserStore();
 
     const { token } = useUserStore();
+
     const [myVideos, setMyVideos] = useState<VideosType[]>([]);
 
     const fetchMyVideos = async () => {
+        if (!token) {
+            console.warn("토큰이 없습니다. 요청 중단.");
+            return;
+        }
+
         const response = await fetch("http://localhost:3001/api/videosinfo", {
             method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 token: token,
             },
         });
@@ -28,6 +36,96 @@ const MyPage = () => {
     }, []);
 
     const [addPointModal, setAddPointModal] = useState<boolean>(false);
+
+    const handleDeleteVideo = async (videoId: string) => {
+        try {
+            const response = await fetch(
+                "http://localhost:3001/api/delete-video",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        token: token,
+                    },
+                    body: JSON.stringify({ videoId }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // 프론트 상태에서도 삭제
+                setMyVideos((prev) =>
+                    prev.filter((v) => v.videoId !== videoId)
+                );
+                alert(data.message);
+            } else {
+                alert(data.error || "삭제 실패");
+            }
+        } catch (err) {
+            console.error("삭제 에러:", err);
+        }
+    };
+
+    // Gemini API 관련 상태
+    // const [geminiPromptInput, setGeminiPromptInput] = useState<string>(""); // 일반 텍스트 입력용
+    const [geminiResponseText, setGeminiResponseText] = useState<string>("");
+    const [isGeneratingSummary, setIsGeneratingSummary] = useState<boolean>(false); // 요약 생성 중 로딩 상태
+    const [geminiError, setGeminiError] = useState<string | null>(null);
+
+    // Gemini API 호출 함수 (프롬프트를 인자로 받음)
+    const callGeminiApi = async (prompt: string) => {
+        setIsGeneratingSummary(true);
+        setGeminiError(null);
+        setGeminiResponseText(""); // 이전 응답 초기화
+
+        try {
+            
+            const response = await fetch(
+                "http://localhost:3000/api/generate-text",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ prompt }),
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(
+                    errorData.error || "Gemini API 호출 중 오류 발생."
+                );
+            }
+
+            const data = await response.json();
+            setGeminiResponseText(data.text);
+        } catch (err) {
+            console.error("Gemini API 호출 에러:", err);
+        } finally {
+            setIsGeneratingSummary(false);
+        }
+    };
+
+    // "요약보기" 버튼 클릭 핸들러
+    const handleSummarizeVideo = (videoId: string) => {
+        const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        console.log(videoId);
+        console.log(videoUrl);
+        const prompt = `${videoUrl} 이 영상을 요약해줘`;
+        console.log(prompt);
+        callGeminiApi(prompt);
+    };
+
+    // 일반 Gemini 텍스트 생성 버튼 클릭 핸들러 (기존 textarea용)
+    // const handleGeneralTextGeneration = () => {
+    //     if (geminiPromptInput.trim()) {
+    //         callGeminiApi(geminiPromptInput);
+    //     } else {
+    //         setGeminiError("프롬프트를 입력해주세요.");
+    //     }
+    // };
 
     return (
         <MainLayout gap={"gap-14"}>
@@ -104,41 +202,98 @@ const MyPage = () => {
                     </TabsContent>
                     <TabsContent
                         value="videoManageMent"
-                        className={` w-full
-                            ${
-                                myVideos
-                                    ? "grid grid-cols-3 grid-rows-3 p-2 gap-2"
-                                    : "flex justify-center items-center"
-                            }
-                            `}
+                        className="w-full min-h-[640px] flex flex-col justify-start items-center"
                     >
-                        {myVideos ? (
-                            myVideos.map((video, i) => (
-                                <div
-                                    key={i}
-                                    className="w-full flex flex-col border border-primary justify-center items-center gap-3 rounded-xl"
-                                >
-                                    <div className="w-60 rounded-2xl overflow-hidden flex justify-center items-center">
-                                        <img
-                                            src={video.thumbnail}
-                                            loading="lazy"
-                                            alt="썸네일"
-                                            className="w-full"
-                                        />
-                                    </div>
-                                    <div className="w-full flex justify-center items-center">
-                                        <h3 className="text-base font-bold">
-                                            {video.title.length > 20
-                                                ? video.title.slice(0, 20) +
-                                                "..."
-                                                : video.title}
-                                        </h3>
-                                    </div>
+                        <div className="w-full max-h-[430px] overflow-y-scroll border-b border-[#616161] p-3">
+                            <div
+                                className={`w-full
+                                ${
+                                    myVideos
+                                        ? "grid grid-cols-3 grid-rows-3 p-2 gap-2"
+                                        : "flex justify-center items-center"
+                                }
+                                `}
+                            >
+                                {myVideos ? (
+                                    myVideos.map((video, i) => (
+                                        <div
+                                            key={i}
+                                            className="w-full flex flex-col border border-primary justify-center items-center gap-3 rounded-xl relative min-h-80"
+                                            title={video.title}
+                                        >
+                                            <button
+                                                className="absolute top-2 right-2 text-xl font-light text-[#3aad6c]"
+                                                onClick={() => {
+                                                    handleDeleteVideo(
+                                                        video.videoId
+                                                    );
+                                                }}
+                                            >
+                                                <FaTimes />
+                                            </button>
+                                            <div className="w-60 rounded-2xl overflow-hidden flex justify-center items-center">
+                                                <img
+                                                    src={video.thumbnail}
+                                                    loading="lazy"
+                                                    alt="썸네일"
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                            <div className="w-full flex flex-col justify-center items-center gap-2 p-3">
+                                                <h3 className="text-base font-bold">
+                                                    {video.title.length > 20
+                                                        ? video.title.slice(
+                                                            0,
+                                                            20
+                                                        ) + "..."
+                                                        : video.title}
+                                                </h3>
+                                                <div className="w-1/2 flex flex-row justify-center items-center gap-2">
+                                                    <a
+                                                        className="w-1/2 btn text-center"
+                                                        href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        영상보기
+                                                    </a>
+                                                    <button
+                                                        className="btn w-1/2"
+                                                        onClick={() =>
+                                                            handleSummarizeVideo(
+                                                                video.videoId
+                                                            )
+                                                        }
+                                                        disabled={isGeneratingSummary} // 요약 생성 중일 때 비활성화
+                                                    >
+                                                        {isGeneratingSummary ? '요약 중...' : '요약보기'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <h3 className="text-xl text-black font-medium">
+                                        수집된 영상이 없습니다!
+                                    </h3>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* 요약 결과 표시 (videoManageMent 탭에 포함) */}
+                        <div className="w-full max-h-[200px] overflow-y-scroll p-3">
+                            {geminiResponseText && (
+                                <div className="">
+                                    <h3 className="text-lg font-bold">클릭한 영상 요약</h3>
+                                    <p className="whitespace-pre-wrap text-base text-[#636262]">{geminiResponseText}</p>
                                 </div>
-                            ))
-                        ) : (
-                            <h3 className="text-xl text-black font-medium">수집된 영상이 없습니다!</h3>
-                        )}
+                            )}
+                            {geminiError && (
+                                <div style={{ color: 'red', marginTop: '10px' }}>
+                                    오류: {geminiError}
+                                </div>
+                            )}
+                        </div>
                     </TabsContent>
                     <TabsContent value="something">something</TabsContent>
                 </div>

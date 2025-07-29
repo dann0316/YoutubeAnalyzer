@@ -90,23 +90,47 @@ app.post('/api/videos', async (req: Request, res: Response): Promise<void> => {
     try {
         // 토큰 검증
         const decodedToken = await admin.auth().verifyIdToken(token);
+        // 검증된 토큰의 uid과 일치된 uid
         const uid = decodedToken.uid;
-
+        // Firestore에서 document의 reference(참조) 생성
         const userVideoDocRef = admin.firestore().collection('videos').doc(`videos_${uid}`);
+        // 실제로 Firesotre에서 해당 문서의 데이터 읽고 데이터의 딱 지금 Snapshot 객체 반환
         const docSnapshot = await userVideoDocRef.get();
+        // 예시: docSnapshot 객체의 구조 (일부 생략)
+        //         {
+        //             exists: true,
+        //                 id: 'videos_abc123',
+        //                     ref: DocumentReference {
+        //                 id: 'videos_abc123',
+        //                     parent: CollectionReference { ... },
+        //     firestore: Firestore { ... }
+        //   },
+        //     metadata: { ... },
+        //     createTime: Timestamp,
+        //     updateTime: Timestamp,
+        //     readTime: Timestamp,
+        //     data(): {
+        //     videos: [
+        //         { id: 'vid1', title: 'Video 1', ... },
+        //         { id: 'vid2', title: 'Video 2', ... }
+        //     ]
+        // }
+        // }
 
+        // 기존 videos 빈배열
         let existingVideos: any[] = [];
 
+        // docSanpShot에 뭐라도 있으면 Snapshot 객체 안에 데이터 넣고 그 데이터 안에 videos 빈배열에 넣기
         if (docSnapshot.exists) {
             const data = docSnapshot.data();
             existingVideos = data?.videos || [];
         }
 
-        // 기존 videoId 목록
-        const existingIds = new Set(existingVideos.map((v: any) => v.id));
+        // 기존 videoId 목록 집합 자료구조로 중복 제거
+        const existingIds = new Set(existingVideos.map((a: any) => a.videoId));
 
         // 중복되지 않는 새 영상만 필터링
-        const uniqueNewVideos = newVideos.filter((v: any) => !existingIds.has(v.id));
+        const uniqueNewVideos = newVideos.filter((a: any) => !existingIds.has(a.videoId));
 
         if (uniqueNewVideos.length === 0) {
             res.status(200).json({ message: '중복된 영상이므로 추가할 게 없음' });
@@ -154,6 +178,47 @@ app.post('/api/videosinfo', async (req: Request, res: Response) => {
     } catch (error: any) {
         console.error('영상 정보 조회 실패:', error.message);
         res.status(400).json({ message: '영상 정보 조회 실패' });
+    }
+});
+
+app.post('/api/delete-video', async (req: Request, res: Response): Promise<void> => {
+    const token = req.headers['token'];
+    const { videoId } = req.body;
+
+    if (!token || typeof token !== 'string') {
+        res.status(401).json({ error: '토큰이 없습니다.' });
+        return;
+    }
+
+    if (!videoId) {
+        res.status(400).json({ error: '삭제할 videoId가 필요합니다.' });
+        return;
+    }
+
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const uid = decodedToken.uid;
+
+        const userVideoDocRef = admin.firestore().collection('videos').doc(`videos_${uid}`);
+        const doc = await userVideoDocRef.get();
+
+        if (!doc.exists) {
+            res.status(404).json({ error: '해당 유저의 영상 정보가 없습니다.' });
+            return;
+        }
+
+        const data = doc.data();
+        const existingVideos = data?.videos || [];
+
+        // videoId로 영상 필터링
+        const updatedVideos = existingVideos.filter((v: any) => v.id !== videoId);
+
+        await userVideoDocRef.update({ videos: updatedVideos });
+
+        res.status(200).json({ message: '영상 삭제 성공' });
+    } catch (error: any) {
+        console.error("영상 삭제 실패:", error.message);
+        res.status(500).json({ error: '서버 에러' });
     }
 });
 
