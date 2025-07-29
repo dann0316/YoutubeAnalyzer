@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { storeType, UserStoreType } from '../types/youtube.type'
+import { updateUserPoint } from '@/utils/firestoreUser';
 
 export const useStore = create<storeType>((set) => ({
     videos: [],
@@ -26,7 +27,13 @@ export const useUserStore = create<UserStoreType>()(
             point: 0,
             role: "",
             setUser: (user) => set(user),
-            setPoint: (value) => set({ point: value }),
+            setPoint: (value) => set((state) => {
+                // Firestore도 같이 업데이트
+                if (state.uid) updateUserPoint(state.uid, value);
+
+                return { ...state, point: value };
+            }),
+
             clearUser: () => set({
                 uid: "",
                 token: "",
@@ -37,10 +44,11 @@ export const useUserStore = create<UserStoreType>()(
             })
         }),
         {
-            name: "user"
+            name: "user",
+            partialize: (state) => ({ uid: state.uid, email: state.email, role: state.role, nickname: state.nickname, point: state.point }),
         }
     )
-)
+);
 
 // set은 Zustand가 내부적으로 주입하는 함수 (상태 변경함수)
 

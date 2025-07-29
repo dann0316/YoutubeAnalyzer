@@ -1,4 +1,5 @@
 import MainLayout from "@/components/layoutui/MainLayout";
+import AddPoint from "@/components/pageui/AddPoint";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserStore } from "@/stores/store";
 import type { VideosType } from "@/types/youtube.type";
@@ -25,6 +26,8 @@ const MyPage = () => {
     useEffect(() => {
         fetchMyVideos();
     }, []);
+
+    const [addPointModal, setAddPointModal] = useState<boolean>(false);
 
     return (
         <MainLayout gap={"gap-14"}>
@@ -87,31 +90,55 @@ const MyPage = () => {
                         className="flex flex-col justify-center items-center"
                     >
                         <div>현재 포인트: {point}</div>
-                        <button className="btn">포인트 충전</button>
+                        <button
+                            className="btn"
+                            onClick={() => {
+                                setAddPointModal(true);
+                            }}
+                        >
+                            포인트 충전
+                        </button>
+                        {addPointModal && (
+                            <AddPoint setAddPointModal={setAddPointModal} />
+                        )}
                     </TabsContent>
                     <TabsContent
                         value="videoManageMent"
-                        className="grid grid-cols-3 grid-rows-3 p-2 gap-2 w-full"
+                        className={` w-full
+                            ${
+                                myVideos
+                                    ? "grid grid-cols-3 grid-rows-3 p-2 gap-2"
+                                    : "flex justify-center items-center"
+                            }
+                            `}
                     >
-                        {myVideos.map((video, i) => (
-                            <div key={i} className="w-full flex flex-col border border-primary justify-center items-center gap-3 rounded-xl">
-                                <div className="w-60 rounded-2xl overflow-hidden flex justify-center items-center">
-                                    <img
-                                        src={video.thumbnail}
-                                        loading="lazy"
-                                        alt="썸네일"
-                                        className="w-full"
-                                    />
+                        {myVideos ? (
+                            myVideos.map((video, i) => (
+                                <div
+                                    key={i}
+                                    className="w-full flex flex-col border border-primary justify-center items-center gap-3 rounded-xl"
+                                >
+                                    <div className="w-60 rounded-2xl overflow-hidden flex justify-center items-center">
+                                        <img
+                                            src={video.thumbnail}
+                                            loading="lazy"
+                                            alt="썸네일"
+                                            className="w-full"
+                                        />
+                                    </div>
+                                    <div className="w-full flex justify-center items-center">
+                                        <h3 className="text-base font-bold">
+                                            {video.title.length > 20
+                                                ? video.title.slice(0, 20) +
+                                                "..."
+                                                : video.title}
+                                        </h3>
+                                    </div>
                                 </div>
-                                <div className="w-full flex justify-center items-center">
-                                    <h3 className="text-base font-bold">
-                                        {video.title.length > 20
-                                            ? video.title.slice(0, 20) + "..."
-                                            : video.title}
-                                    </h3>
-                                </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <h3 className="text-xl text-black font-medium">수집된 영상이 없습니다!</h3>
+                        )}
                     </TabsContent>
                     <TabsContent value="something">something</TabsContent>
                 </div>

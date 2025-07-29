@@ -87,10 +87,14 @@ const Header: React.FC<HeaderPropsType> = ({
 
                     <button
                         onClick={() => {
-                            alert("포인트가 1 차감됩니다!");
-                            setPoint(point - 1);
-                            fetchVideos();
-                            navigate("/list");
+                            if (point > 0) {
+                                alert("포인트가 1 차감됩니다!");
+                                setPoint(point - 1);
+                                fetchVideos();
+                                navigate("/list");
+                            } else {
+                                alert("포인트가 부족합니다!");
+                            }
                         }}
                         className="text-white"
                         aria-label="검색"
@@ -138,7 +142,7 @@ const Header: React.FC<HeaderPropsType> = ({
                             onClick={() => {
                                 signOut(auth)
                                     .then(() => {
-                                        alert('로그아웃 완료');
+                                        alert("로그아웃 완료");
                                         console.log("로그아웃 완료");
                                     })
                                     .catch((error) => {

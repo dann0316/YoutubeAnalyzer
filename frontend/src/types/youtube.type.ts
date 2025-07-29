@@ -37,6 +37,7 @@ export interface FormType {
     email: string;
     password: string;
     nickname: string;
+    point: string;
 }
 
 export interface NewsItemsType {
