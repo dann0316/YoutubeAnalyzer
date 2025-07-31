@@ -1,6 +1,7 @@
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { firebaseApp } from "./firebase"
 
-const db = getFirestore();
+const db = getFirestore(firebaseApp);
 
 export const updateUserPoint = async (uid: string, point: number) => {
     const userDocRef = doc(db, "users", uid);

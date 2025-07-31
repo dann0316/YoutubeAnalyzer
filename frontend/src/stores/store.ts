@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import type { storeType, UserStoreType } from '../types/youtube.type'
 import { updateUserPoint } from '@/utils/firestoreUser';
 
-export const useStore = create<storeType>((set) => ({
+export const useKeywordStore = create<storeType>((set) => ({
     videos: [],
     nextPageToken: null,
     setVideos: (videos) => set({ videos }),

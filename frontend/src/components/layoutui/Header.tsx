@@ -4,7 +4,7 @@ import LogIn from "../pageui/LogIn";
 import { useNavigate } from "react-router-dom";
 import logo from "@/imgs/logo.png";
 import { getAuth, onAuthStateChanged, type User, signOut } from "firebase/auth";
-import { useUserStore } from "@/stores/store";
+import { useKeywordStore, useUserStore } from "@/stores/store";
 
 type HeaderPropsType = {
     keyword: string;
@@ -19,14 +19,12 @@ type HeaderPropsType = {
 };
 
 const Header: React.FC<HeaderPropsType> = ({
-    keyword,
     fetchSuggestions,
     handleKeyDown,
     fetchVideos,
     suggestions,
     setSelectedIndex,
     selectedIndex,
-    setKeyword,
     setSuggestions,
 }) => {
     const [loginModal, setLoginModal] = useState(false);
@@ -36,13 +34,16 @@ const Header: React.FC<HeaderPropsType> = ({
 
     const auth = getAuth();
 
+    const { keyword } = useKeywordStore();
+    const setKeyword = useKeywordStore((state) => state.setKeyword);
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser(user);
             } else {
                 setUser(null);
-                navigate('/');
+                navigate("/");
             }
         });
 

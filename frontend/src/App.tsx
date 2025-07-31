@@ -4,12 +4,13 @@ import Header from "./components/layoutui/Header";
 import "./App.css";
 import { useYoutubeData } from "./hooks/useYoutubeData";
 import { useAutoCompleteData } from "./hooks/useAutoCompleteData";
-import { useStore } from "./stores/store";
+import { useKeywordStore } from "./stores/store";
 import SignUp from "./pages/SignUp";
 import List from "@/pages/List";
 import MyPage from "./pages/MyPage";
 import { useInitUser } from "./hooks/useInitUser";
 import ProtectedRoute from "./components/authui/ProtectedRoute";
+import Footer from "./components/layoutui/Footer";
 
 function App() {
     const { fetchVideos, videos, setVideos, nextPageToken, error } =
@@ -24,8 +25,8 @@ function App() {
         handleKeyDown,
     } = useAutoCompleteData();
 
-    const { keyword } = useStore();
-    const setKeyword = useStore((state) => state.setKeyword);
+    const { keyword } = useKeywordStore();
+    const setKeyword = useKeywordStore((state) => state.setKeyword);
 
     // 성과도 점수를 5단계로 변환하는 함수
     const getPerformanceLabel = (score: number) => {
@@ -86,6 +87,8 @@ function App() {
                     }
                 />
             </Routes>
+            
+            <Footer/>
         </div>
     );
 }

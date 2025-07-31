@@ -1,19 +1,15 @@
 import MainLayout from "@/components/layoutui/MainLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NewsItemsType } from "@/types/youtube.type";
+import { useKeywordStore } from "@/stores/store";
 
 const Home = () => {
     const [news, setNews] = useState<NewsItemsType[]>([]);
-    const [newsQuery, setNewsQuery] = useState<string>("");
 
-    // const [trendKeyword, setTrendKeyword] = useState<string>("");
-
-    const fetchTrend = async (input: string) => {
-        if (!input.trim()) return;
-
+    const fetchTrend = async (keyword: string) => {
         try {
             const response = await fetch(
-                `http://localhost:3000/api/news?query=${input}`
+                `http://localhost:3000/api/news?query=${keyword}`
             );
             const data = await response.json();
             // .json()가 뭐지 response를 json으로 만들어주는 건가
@@ -25,9 +21,13 @@ const Home = () => {
         }
     };
 
-    // useEffect(() => {
-    //     fetchTrend(newsQuery);
-    // }, [newsQuery]);
+    const { keyword } = useKeywordStore();
+
+    // 랜더링 시점 조절
+    useEffect(() => {
+        if (!keyword) return;
+        fetchTrend(keyword);
+    }, []);
 
     return (
         <MainLayout>
@@ -45,28 +45,31 @@ const Home = () => {
                     <h3 className="text-xl font-semibold">
                         현재 인기 키워드 🚀
                     </h3>
-                    <div>
-                        {/* {trendKeyword} */}
-                    </div>
+                    <div>{/* {trendKeyword} */}</div>
                 </div>
 
                 <div className="w-1/2 flex flex-col justify-center items-start gap-2 border border-[#44cfa54b] rounded-2xl p-5">
-                    <h3 className="text-xl font-semibold">현재 뉴스 📰</h3>
-                    <input
-                        type="text"
-                        value={newsQuery}
-                        onChange={(e) => setNewsQuery(e.target.value)}
-                    />
-                    <button onClick={() => fetchTrend(newsQuery)}>검색</button>
+                    <h3 className="text-xl font-semibold">
+                        {keyword} 현재 뉴스 📰
+                    </h3>
                     <ul className="flex flex-col gap-3 border border-secondary p-5 rounded-xl w-full">
                         {news.map((item, idx) => (
-                            <li key={idx} className="border border-secondary rounded-md p-2 bg-white text-black hover:bg-secondary hover:text-white trnasition duration-300 cursor-pointer" title={`${item.title.replace(/<[^>]+>/g, "")}`}>
+                            <li
+                                key={idx}
+                                className="border border-secondary rounded-md p-2 bg-white text-black hover:bg-secondary hover:text-white trnasition duration-300 cursor-pointer"
+                                title={`${item.title.replace(/<[^>]+>/g, "")}`}
+                            >
                                 <a
                                     href={item.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    {item.title.replace(/<[^>]+>/g, "").length > 30 ? item.title.replace(/<[^>]+>/g, "").slice(0,30) + '...' : item.title.replace(/<[^>]+>/g, "")}
+                                    {item.title.replace(/<[^>]+>/g, "").length >
+                                    30
+                                        ? item.title
+                                            .replace(/<[^>]+>/g, "")
+                                            .slice(0, 30) + "..."
+                                        : item.title.replace(/<[^>]+>/g, "")}
                                 </a>
                                 {/* <p
                                     dangerouslySetInnerHTML={{
