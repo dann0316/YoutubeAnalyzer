@@ -267,6 +267,7 @@ app.get("/api/news", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: "네이버 뉴스 API 호출 실패", error: err.message });
     }
 }));
+// 제미나이 요약 기능
 app.post('/api/generate-text', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const geminiApiKey = process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
@@ -277,6 +278,7 @@ app.post('/api/generate-text', (req, res) => __awaiter(void 0, void 0, void 0, f
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     try {
         const { prompt } = req.body; // 프론트엔드에서 보낸 프롬프트
+        console.log(prompt);
         if (!prompt) {
             return res.status(400).json({ error: 'Prompt is required.' });
         }

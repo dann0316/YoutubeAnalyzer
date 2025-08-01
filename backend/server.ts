@@ -335,6 +335,7 @@ app.get("/api/news", async (req: Request, res: Response) => {
     }
 });
 
+// 제미나이 요약 기능
 app.post('/api/generate-text', async (req: Request, res: Response) => {
     const geminiApiKey = process.env.GEMINI_API_KEY as string;
 
@@ -348,6 +349,7 @@ app.post('/api/generate-text', async (req: Request, res: Response) => {
 
     try {
         const { prompt } = req.body; // 프론트엔드에서 보낸 프롬프트
+        console.log(prompt);
 
         if (!prompt) {
             return res.status(400).json({ error: 'Prompt is required.' });

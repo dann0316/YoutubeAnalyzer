@@ -23,7 +23,7 @@ app.post('/api/register', async (req: Request<{}, {}, RegisterRequestBody>, res:
 
     // front에서 받은 정보를 Authentication의 정보를 포함해서 Firestore DB로 저장
     const { uid, nickname, password, point } = req.body;
-    console.log("📦 받은 요청 body:", req.body);
+    console.log("받은 요청 body:", req.body);
 
     try {
         const user = await admin.auth().getUser(uid);

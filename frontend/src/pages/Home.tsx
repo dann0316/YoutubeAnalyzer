@@ -45,7 +45,9 @@ const Home = () => {
                     <h3 className="text-xl font-semibold">
                         현재 인기 키워드 🚀
                     </h3>
-                    <div>{/* {trendKeyword} */}</div>
+                    <ul className="flex flex-col gap-3 border border-secondary p-5 rounded-xl w-full">
+
+                    </ul>
                 </div>
 
                 <div className="w-1/2 flex flex-col justify-center items-start gap-2 border border-[#44cfa54b] rounded-2xl p-5">

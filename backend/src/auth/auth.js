@@ -25,7 +25,7 @@ app.use(cors({
 app.post('/api/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // front에서 받은 정보를 Authentication의 정보를 포함해서 Firestore DB로 저장
     const { uid, nickname, password, point } = req.body;
-    console.log("📦 받은 요청 body:", req.body);
+    console.log("받은 요청 body:", req.body);
     try {
         const user = yield firebaseAdmin_1.default.auth().getUser(uid);
         console.log('Firebase Auth에 저장됨 유저 이메일:', user.email);

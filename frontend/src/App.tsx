@@ -11,6 +11,7 @@ import MyPage from "./pages/MyPage";
 import { useInitUser } from "./hooks/useInitUser";
 import ProtectedRoute from "./components/authui/ProtectedRoute";
 import Footer from "./components/layoutui/Footer";
+import Analyze from "./pages/Analyze";
 
 function App() {
     const { fetchVideos, videos, setVideos, nextPageToken, error } =
@@ -83,6 +84,14 @@ function App() {
                     element={
                         <ProtectedRoute requireAuth={true}>
                             <MyPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/analyze"
+                    element={
+                        <ProtectedRoute requireAuth={true}>
+                            <Analyze />
                         </ProtectedRoute>
                     }
                 />

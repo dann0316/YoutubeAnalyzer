@@ -132,7 +132,7 @@ const MyPage = () => {
             <h3 className="text-2xl font-bold text-black">My Page</h3>
             <Tabs
                 defaultValue="account"
-                className="border border-line w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden"
+                className="border border-line w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden bg-[#44cfa57e]"
             >
                 <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-line rounded-none">
                     <div className="w-full h-3/5 flex flex-col justify-center items-center border-b border-line">
@@ -172,12 +172,6 @@ const MyPage = () => {
                             >
                                 영상 관리
                             </TabsTrigger>
-                            <TabsTrigger
-                                value="something"
-                                className="TabsTrigger"
-                            >
-                                뭐 관리
-                            </TabsTrigger>
                         </div>
                     </div>
                 </TabsList>
@@ -202,14 +196,14 @@ const MyPage = () => {
                     </TabsContent>
                     <TabsContent
                         value="videoManageMent"
-                        className="w-full min-h-[640px] flex flex-col justify-start items-center"
+                        className="w-full h-auto flex flex-col justify-start items-center"
                     >
-                        <div className="w-full max-h-[430px] overflow-y-scroll border-b border-[#616161] p-3">
+                        <div className="w-full h-[490px] overflow-y-scroll p-1 border-b-4 border-line">
                             <div
                                 className={`w-full
                                 ${
                                     myVideos
-                                        ? "grid grid-cols-3 grid-rows-3 p-2 gap-2"
+                                        ? "grid grid-cols-4 p-2 gap-2"
                                         : "flex justify-center items-center"
                                 }
                                 `}
@@ -218,7 +212,7 @@ const MyPage = () => {
                                     myVideos.map((video, i) => (
                                         <div
                                             key={i}
-                                            className="w-full flex flex-col border border-primary justify-center items-center gap-3 rounded-xl relative min-h-80"
+                                            className="shadow-lg w-full flex flex-col border border-primary justify-center items-center gap-3 rounded-xl relative min-h-80 bg-gray-100"
                                             title={video.title}
                                         >
                                             <button
@@ -281,10 +275,10 @@ const MyPage = () => {
                         </div>
 
                         {/* 요약 결과 표시 (videoManageMent 탭에 포함) */}
-                        <div className="w-full max-h-[200px] overflow-y-scroll p-3">
+                        <div className="w-full h-[150px] overflow-y-scroll p-3">
+                            <h3 className="text-lg font-bold">클릭한 영상 요약</h3>
                             {geminiResponseText && (
                                 <div className="">
-                                    <h3 className="text-lg font-bold">클릭한 영상 요약</h3>
                                     <p className="whitespace-pre-wrap text-base text-[#636262]">{geminiResponseText}</p>
                                 </div>
                             )}
@@ -295,7 +289,6 @@ const MyPage = () => {
                             )}
                         </div>
                     </TabsContent>
-                    <TabsContent value="something">something</TabsContent>
                 </div>
             </Tabs>
         </MainLayout>

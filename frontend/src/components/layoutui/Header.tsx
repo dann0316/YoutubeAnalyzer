@@ -1,10 +1,21 @@
 import { useEffect, useState, type ReactEventHandler } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaHome, FaListUl, FaChartBar } from "react-icons/fa";
 import LogIn from "../pageui/LogIn";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "@/imgs/logo.png";
 import { getAuth, onAuthStateChanged, type User, signOut } from "firebase/auth";
 import { useKeywordStore, useUserStore } from "@/stores/store";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LuUser, LuLogIn, LuLogOut, LuUserPlus } from "react-icons/lu";
 
 type HeaderPropsType = {
     keyword: string;
@@ -50,11 +61,12 @@ const Header: React.FC<HeaderPropsType> = ({
         return () => unsubscribe();
     }, []);
 
-    const { nickname, point, setPoint } = useUserStore();
+    const { nickname, point, email, setPoint } = useUserStore();
 
     return (
         <header className="fixed top-0 left-0 w-full h-28 bg-gray-50 border-b border-primary flex justify-between items-center px-10 z-10 shadow-md">
-            {/* 왼쪽 제목 */}
+
+            {/* logo section */}
             <div className="w-1/3 flex flex-row justify-start items-center">
                 <div
                     className="w-auto h-12 cursor-pointer"
@@ -66,8 +78,25 @@ const Header: React.FC<HeaderPropsType> = ({
                 </div>
             </div>
 
-            {/* 가운데 검색창 */}
-            <div className="w-1/3 relative flex flex-row justify-center items-center">
+            {/* nav section */}
+            <nav className="w-1/3 relative flex flex-row justify-center items-center gap-5 text-primary text-lg font-bold uppercase">
+                <Link to={"/"} className="flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 ease-in-out">
+                    {" "}
+                    <FaHome />
+                    home
+                </Link>
+                <Link to={"/list"} className="flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 ease-in-out">
+                    <FaListUl />
+                    list
+                </Link>
+                <Link to={"/analyze"} className="flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 ease-in-out">
+                    <FaChartBar />
+                    analyze
+                </Link>
+            </nav>
+
+            {/* 검색창, auth section */}
+            <div className="w-1/3 flex flex-row justify-end items-center gap-5">
                 <div className="group w-2/3 flex flex-row justify-between items-center bg-primary rounded-lg p-4 gap-2 group-focus-within:bg-blue-500 transition-all duration-300">
                     <input
                         type="text"
@@ -125,62 +154,85 @@ const Header: React.FC<HeaderPropsType> = ({
                         )}
                     </div>
                 </div>
-            </div>
 
-            {/* 오른쪽 로그인, 회원가입 */}
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <button>
+                            <Avatar>
+                                <AvatarImage src="https://github.com/shadcn.png" />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                        </button>
+                    </DropdownMenuTrigger>
 
-            <div className="w-1/3 flex flex-row justify-end items-center gap-2">
-                {user ? (
-                    <>
-                        <h3 className="text-primary font-medium text-lg">
-                            Hello! {nickname}
-                        </h3>
-                        <h3 className="text-primary">|</h3>
-                        <button
-                            className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
-                            onClick={() => {
-                                signOut(auth)
-                                    .then(() => {
-                                        alert("로그아웃 완료");
-                                        console.log("로그아웃 완료");
-                                    })
-                                    .catch((error) => {
-                                        console.error("로그아웃 실패", error);
-                                    });
-                            }}
-                        >
-                            SignOut
-                        </button>
-                        <button
-                            className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
-                            onClick={() => {
-                                navigate("/mypage");
-                            }}
-                        >
-                            MyPage
-                        </button>
-                    </>
-                ) : (
-                    <>
-                        <button
-                            className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
-                            onClick={() => {
-                                setLoginModal(true);
-                            }}
-                        >
-                            SignIn
-                        </button>
-                        <button
-                            className="text-white font-bold transition-all duration-300 text-lg border-2 border-primary bg-primary px-1 rounded-lg hover:bg-white hover:text-primary"
-                            onClick={() => {
-                                navigate("/signup");
-                            }}
-                        >
-                            SingUp
-                        </button>
-                        {loginModal && <LogIn setLoginModal={setLoginModal} />}
-                    </>
-                )}
+                    <DropdownMenuContent className="w-56" align="start">
+                        <DropdownMenuLabel>
+                            Hello!
+                            <h3 className="text-lg">{nickname}</h3>
+                            <p className="text-sm text-[#adadad]">{email}</p>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            {user ? (
+                                <>
+                                    <DropdownMenuItem
+                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
+                                        onClick={() => {
+                                            signOut(auth)
+                                                .then(() => {
+                                                    alert("로그아웃 완료");
+                                                    console.log(
+                                                        "로그아웃 완료"
+                                                    );
+                                                })
+                                                .catch((error) => {
+                                                    console.error(
+                                                        "로그아웃 실패",
+                                                        error
+                                                    );
+                                                });
+                                        }}
+                                    >
+                                        <LuLogOut />
+                                        SignOut
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
+                                        onClick={() => {
+                                            navigate("/mypage");
+                                        }}
+                                    >
+                                        <LuUser /> MyPage
+                                    </DropdownMenuItem>
+                                </>
+                            ) : (
+                                <>
+                                    <DropdownMenuItem
+                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
+                                        onClick={() => {
+                                            setLoginModal(true);
+                                        }}
+                                    >
+                                        <LuLogIn />
+                                        SignIn
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className="text-white font-bold transition-all duration-300 text-lg border-2 border-primary bg-primary px-1 rounded-lg hover:bg-white hover:text-primary"
+                                        onClick={() => {
+                                            navigate("/signup");
+                                        }}
+                                    >
+                                        <LuUserPlus />
+                                        SingUp
+                                    </DropdownMenuItem>
+                                    {loginModal && (
+                                        <LogIn setLoginModal={setLoginModal} />
+                                    )}
+                                </>
+                            )}
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </header>
     );
