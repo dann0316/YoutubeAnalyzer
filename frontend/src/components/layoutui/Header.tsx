@@ -1,8 +1,14 @@
 import { useEffect, useState, type ReactEventHandler } from "react";
-import { FaSearch, FaHome, FaListUl, FaChartBar } from "react-icons/fa";
+import {
+    FaSearch,
+    FaHome,
+    FaListUl,
+    FaChartBar,
+    FaRegFileAlt,
+} from "react-icons/fa";
 import LogIn from "../pageui/LogIn";
-import { Link, useNavigate } from "react-router-dom";
-import logo from "@/imgs/logo.png";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import logo from "/logo.png";
 import { getAuth, onAuthStateChanged, type User, signOut } from "firebase/auth";
 import { useKeywordStore, useUserStore } from "@/stores/store";
 import {
@@ -63,9 +69,10 @@ const Header: React.FC<HeaderPropsType> = ({
 
     const { nickname, point, email, setPoint } = useUserStore();
 
+    const location = useLocation(); // 현재 경로 가져오기
+
     return (
         <header className="fixed top-0 left-0 w-full h-28 bg-gray-50 border-b border-primary flex justify-between items-center px-10 z-10 shadow-md">
-
             {/* logo section */}
             <div className="w-1/3 flex flex-row justify-start items-center">
                 <div
@@ -80,19 +87,43 @@ const Header: React.FC<HeaderPropsType> = ({
 
             {/* nav section */}
             <nav className="w-1/3 relative flex flex-row justify-center items-center gap-5 text-primary text-lg font-bold uppercase">
-                <Link to={"/"} className="flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 ease-in-out">
-                    {" "}
+                <Link
+                    to={"/"}
+                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
+                        ${location.pathname === '/' ? "bg-primary text-white" : "bg-gray-50 text-primary"}
+                        `}
+                    
+                >
                     <FaHome />
                     home
                 </Link>
-                <Link to={"/list"} className="flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 ease-in-out">
+                <Link
+                    to={"/list"}
+                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
+                        ${location.pathname === '/list' ? "bg-primary text-white" : "bg-gray-50 text-primary"}
+                        `}
+                >
                     <FaListUl />
                     list
                 </Link>
-                <Link to={"/analyze"} className="flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 ease-in-out">
+                <Link
+                    to={"/analyze"}
+                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
+                        ${location.pathname === '/analyze' ? "bg-primary text-white" : "bg-gray-50 text-primary"}
+                        `}
+                >
                     <FaChartBar />
                     analyze
                 </Link>
+                <a
+                    href="https://zesty-library-b94.notion.site/How-To-Use-Youlytics-2428158d0e208059a140dca7eb668b7f?pvs=143"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 ease-in-out"
+                >
+                    <FaRegFileAlt />
+                    usage
+                </a>
             </nav>
 
             {/* 검색창, auth section */}
@@ -165,7 +196,7 @@ const Header: React.FC<HeaderPropsType> = ({
                         </button>
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent className="w-56" align="start">
+                    <DropdownMenuContent className="w-56" align="end">
                         <DropdownMenuLabel>
                             Hello!
                             <h3 className="text-lg">{nickname}</h3>
@@ -176,7 +207,7 @@ const Header: React.FC<HeaderPropsType> = ({
                             {user ? (
                                 <>
                                     <DropdownMenuItem
-                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
+                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe] cursor-pointer"
                                         onClick={() => {
                                             signOut(auth)
                                                 .then(() => {
@@ -197,7 +228,7 @@ const Header: React.FC<HeaderPropsType> = ({
                                         SignOut
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
-                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
+                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe] cursor-pointer"
                                         onClick={() => {
                                             navigate("/mypage");
                                         }}

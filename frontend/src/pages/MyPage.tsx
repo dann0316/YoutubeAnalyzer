@@ -1,8 +1,10 @@
 import MainLayout from "@/components/layoutui/MainLayout";
 import AddPoint from "@/components/pageui/AddPoint";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import LoadingSpinner from "@/components/viewui/LoadingSpinner";
 import { useUserStore } from "@/stores/store";
 import type { VideosType } from "@/types/youtube.type";
+
 import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 
@@ -13,22 +15,45 @@ const MyPage = () => {
 
     const [myVideos, setMyVideos] = useState<VideosType[]>([]);
 
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [error, setError] = useState<string | null>(null);
+
     const fetchMyVideos = async () => {
+        setLoading(true);
+        setError(null);
+
         if (!token) {
-            console.warn("토큰이 없습니다. 요청 중단.");
+            setError("토큰이 없습니다.");
+            setLoading(false);
             return;
         }
 
-        const response = await fetch("http://localhost:3001/api/videosinfo", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                token: token,
-            },
-        });
-        const data = await response.json();
+        try {
+            const response = await fetch(
+                "http://localhost:3001/api/videosinfo",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        token: token,
+                    },
+                }
+            );
 
-        setMyVideos(data.videos);
+            if (!response.ok) {
+                throw new Error("서버 응답 실패");
+            }
+
+            const data = await response.json();
+            setMyVideos(data.videos || []);
+        } catch (err) {
+            console.error(err);
+            setError("서버와 연결할 수 없습니다.");
+            setMyVideos([]); // 명시적으로 빈 상태로
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -70,7 +95,8 @@ const MyPage = () => {
     // Gemini API 관련 상태
     // const [geminiPromptInput, setGeminiPromptInput] = useState<string>(""); // 일반 텍스트 입력용
     const [geminiResponseText, setGeminiResponseText] = useState<string>("");
-    const [isGeneratingSummary, setIsGeneratingSummary] = useState<boolean>(false); // 요약 생성 중 로딩 상태
+    const [isGeneratingSummary, setIsGeneratingSummary] =
+        useState<boolean>(false); // 요약 생성 중 로딩 상태
     const [geminiError, setGeminiError] = useState<string | null>(null);
 
     // Gemini API 호출 함수 (프롬프트를 인자로 받음)
@@ -80,7 +106,6 @@ const MyPage = () => {
         setGeminiResponseText(""); // 이전 응답 초기화
 
         try {
-            
             const response = await fetch(
                 "http://localhost:3000/api/generate-text",
                 {
@@ -132,7 +157,7 @@ const MyPage = () => {
             <h3 className="text-2xl font-bold text-black">My Page</h3>
             <Tabs
                 defaultValue="account"
-                className="border border-line w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden bg-[#44cfa57e]"
+                className="border border-line w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden"
             >
                 <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-line rounded-none">
                     <div className="w-full h-3/5 flex flex-col justify-center items-center border-b border-line">
@@ -157,7 +182,7 @@ const MyPage = () => {
                             {/* trigger section */}
                             <TabsTrigger
                                 value="account"
-                                className="border border-gray-600 bg-gray-600 text-white text-sm rounded-3xl hover:text-gray-600 hover:bg-white transition duration-300 ease-in-out data-[state=active]:bg-black data-[state=active]:text-white"
+                                className="border border-gray-600 bg-gray-600 text-white text-sm rounded-3xl hover:text-gray-600 hover:bg-white transition duration-300 ease-in-out data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:cursor-not-allowed"
                             >
                                 프로필 수정
                             </TabsTrigger>
@@ -168,7 +193,7 @@ const MyPage = () => {
                         <div className="flex flex-col justify-center items-start gap-3">
                             <TabsTrigger
                                 value="videoManageMent"
-                                className="TabsTrigger"
+                                className="TabsTrigger data-[state=active]:cursor-not-allowed"
                             >
                                 영상 관리
                             </TabsTrigger>
@@ -196,9 +221,9 @@ const MyPage = () => {
                     </TabsContent>
                     <TabsContent
                         value="videoManageMent"
-                        className="w-full h-auto flex flex-col justify-start items-center"
+                        className="w-full h-auto flex flex-col justify-start items-center p-5 gap-5"
                     >
-                        <div className="w-full h-[490px] overflow-y-scroll p-1 border-b-4 border-line">
+                        <div className="w-full h-[425px] overflow-y-auto p-1 border-2 border-primary rounded-lg mypage-tab-content">
                             <div
                                 className={`w-full
                                 ${
@@ -208,7 +233,17 @@ const MyPage = () => {
                                 }
                                 `}
                             >
-                                {myVideos ? (
+                                {loading ? (
+                                    <div><LoadingSpinner/></div>
+                                ) : error ? (
+                                    <h3 className="text-lg text-red-500 font-medium">
+                                        {error}
+                                    </h3>
+                                ) : myVideos.length === 0 ? (
+                                    <h3 className="text-xl text-black font-medium">
+                                        수집된 영상이 없습니다!
+                                    </h3>
+                                ) : (
                                     myVideos.map((video, i) => (
                                         <div
                                             key={i}
@@ -235,14 +270,14 @@ const MyPage = () => {
                                             </div>
                                             <div className="w-full flex flex-col justify-center items-center gap-2 p-3">
                                                 <h3 className="text-base font-bold">
-                                                    {video.title.length > 20
+                                                    {video.title.length > 15
                                                         ? video.title.slice(
                                                             0,
-                                                            20
+                                                            15
                                                         ) + "..."
                                                         : video.title}
                                                 </h3>
-                                                <div className="w-1/2 flex flex-row justify-center items-center gap-2">
+                                                <div className="w-full flex flex-row justify-center items-center gap-2">
                                                     <a
                                                         className="w-1/2 btn text-center"
                                                         href={`https://www.youtube.com/watch?v=${video.videoId}`}
@@ -258,32 +293,38 @@ const MyPage = () => {
                                                                 video.videoId
                                                             )
                                                         }
-                                                        disabled={isGeneratingSummary} // 요약 생성 중일 때 비활성화
+                                                        disabled={
+                                                            isGeneratingSummary
+                                                        } // 요약 생성 중일 때 비활성화
                                                     >
-                                                        {isGeneratingSummary ? '요약 중...' : '요약보기'}
+                                                        {isGeneratingSummary
+                                                            ? "요약 중..."
+                                                            : "요약보기"}
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     ))
-                                ) : (
-                                    <h3 className="text-xl text-black font-medium">
-                                        수집된 영상이 없습니다!
-                                    </h3>
                                 )}
                             </div>
                         </div>
 
                         {/* 요약 결과 표시 (videoManageMent 탭에 포함) */}
-                        <div className="w-full h-[150px] overflow-y-scroll p-3">
-                            <h3 className="text-lg font-bold">클릭한 영상 요약</h3>
+                        <div className="w-full h-[150px] overflow-x-hidden overflow-y-auto p-5 border-2 border-primary rounded-lg">
+                            <h3 className="text-base font-medium">
+                                클릭한 영상 요약
+                            </h3>
                             {geminiResponseText && (
                                 <div className="">
-                                    <p className="whitespace-pre-wrap text-base text-[#636262]">{geminiResponseText}</p>
+                                    <p className="whitespace-pre-wrap text-base text-[#636262]">
+                                        {geminiResponseText}
+                                    </p>
                                 </div>
                             )}
                             {geminiError && (
-                                <div style={{ color: 'red', marginTop: '10px' }}>
+                                <div
+                                    style={{ color: "red", marginTop: "10px" }}
+                                >
                                     오류: {geminiError}
                                 </div>
                             )}

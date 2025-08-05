@@ -4,6 +4,7 @@ const axios = require("axios");
 const cors = require("cors");
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { Request, Response } from "express";
+import openai from './src/utils/openai';
 
 const app = express();
 const PORT = 3000;
@@ -363,6 +364,28 @@ app.post('/api/generate-text', async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error calling Gemini API:', error instanceof Error ? error.message : error);
         res.status(500).json({ error: 'Failed to generate content from Gemini API.' });
+    }
+});
+
+app.post('/api/gpt-analyze', async (req: Request, res: Response) => {
+    const { prompt } = req.body;
+
+    if (!prompt || typeof prompt !== 'string') {
+        return res.status(400).json({ error: 'prompt는 문자열이어야 합니다.' });
+    }
+
+    try {
+        const chatCompletion = await openai.chat.completions.create({
+            model: 'gpt-4', // or 'gpt-3.5-turbo'
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.7,
+        });
+
+        const gptReply = chatCompletion.choices[0].message?.content;
+        return res.json({ result: gptReply });
+    } catch (error) {
+        console.error('GPT 호출 오류:', error);
+        return res.status(500).json({ error: 'GPT API 호출 중 오류 발생' });
     }
 });
 

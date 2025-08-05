@@ -8,12 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 const generative_ai_1 = require("@google/generative-ai");
+const openai_1 = __importDefault(require("./src/utils/openai"));
 const app = express();
 const PORT = 3000;
 app.use(cors());
@@ -290,6 +294,26 @@ app.post('/api/generate-text', (req, res) => __awaiter(void 0, void 0, void 0, f
     catch (error) {
         console.error('Error calling Gemini API:', error instanceof Error ? error.message : error);
         res.status(500).json({ error: 'Failed to generate content from Gemini API.' });
+    }
+}));
+app.post('/api/gpt-analyze', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { prompt } = req.body;
+    if (!prompt || typeof prompt !== 'string') {
+        return res.status(400).json({ error: 'prompt는 문자열이어야 합니다.' });
+    }
+    try {
+        const chatCompletion = yield openai_1.default.chat.completions.create({
+            model: 'gpt-4', // or 'gpt-3.5-turbo'
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.7,
+        });
+        const gptReply = (_a = chatCompletion.choices[0].message) === null || _a === void 0 ? void 0 : _a.content;
+        return res.json({ result: gptReply });
+    }
+    catch (error) {
+        console.error('GPT 호출 오류:', error);
+        return res.status(500).json({ error: 'GPT API 호출 중 오류 발생' });
     }
 }));
 // 서버 실행
