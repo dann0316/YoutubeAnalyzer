@@ -12,8 +12,11 @@ import { useInitUser } from "./hooks/useInitUser";
 import ProtectedRoute from "./components/authui/ProtectedRoute";
 import Footer from "./components/layoutui/Footer";
 import Analyze from "./pages/Analyze";
+import { useState } from "react";
+import LogIn from "./components/pageui/LogIn";
 
 function App() {
+    const [loginModal, setLoginModal] = useState(false);
     const { fetchVideos, videos, setVideos, nextPageToken, error } =
         useYoutubeData();
 
@@ -52,8 +55,9 @@ function App() {
                 selectedIndex={selectedIndex}
                 setKeyword={setKeyword}
                 setSuggestions={setSuggestions}
+                setLoginModal={setLoginModal}
             />
-
+            {loginModal && <LogIn setLoginModal={setLoginModal} />}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route
@@ -96,8 +100,8 @@ function App() {
                     }
                 />
             </Routes>
-            
-            <Footer/>
+
+            <Footer />
         </div>
     );
 }
