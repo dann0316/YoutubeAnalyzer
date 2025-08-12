@@ -1,45 +1,45 @@
-name: Deploy to EC2 And AI Reviews
+# name: Deploy to EC2 And AI Reviews
 
-on:
-    push:
-        branches:
-            - main
+# on:
+#     push:
+#         branches:
+#             - main
 
-jobs:
-    Deploy:
-        runs-on: ubuntu-latest
-        steps:
-            # - name: SSH로 EC2 접속
-            #   uses: appleboy/ssh-action@v1
-            #   env:
-            #       ENV: ${{ secrets.ENV }}
-            #   with:
-            #       host: ${{ secrets.EC2_HOST }}
-            #       username: ${{ secrets.EC2_USERNAME }}
-            #       key: ${{ secrets.EC2_PRIVATE_KEY }}
-            #       envs: ENV
-            #       script: |
-            #         sudo chown -R $USER:$USER /home/ubuntu/YoutubeAnalyzer
-            #         cd /home/ubuntu/YoutubeAnalyzer
-            #         git config --global --add safe.directory /home/ubuntu/YoutubeAnalyzer
-            #         git pull origin main
-            #         cd backend
-            #         rm -rf .env
-            #         echo "$ENV" > .env
-            #         npm install
-            #         pm2 kill
-            #         pm2 start server.js
+# jobs:
+#     Deploy:
+#         runs-on: ubuntu-latest
+#         steps:
+#             # - name: SSH로 EC2 접속
+#             #   uses: appleboy/ssh-action@v1
+#             #   env:
+#             #       ENV: ${{ secrets.ENV }}
+#             #   with:
+#             #       host: ${{ secrets.EC2_HOST }}
+#             #       username: ${{ secrets.EC2_USERNAME }}
+#             #       key: ${{ secrets.EC2_PRIVATE_KEY }}
+#             #       envs: ENV
+#             #       script: |
+#             #         sudo chown -R $USER:$USER /home/ubuntu/YoutubeAnalyzer
+#             #         cd /home/ubuntu/YoutubeAnalyzer
+#             #         git config --global --add safe.directory /home/ubuntu/YoutubeAnalyzer
+#             #         git pull origin main
+#             #         cd backend
+#             #         rm -rf .env
+#             #         echo "$ENV" > .env
+#             #         npm install
+#             #         pm2 kill
+#             #         pm2 start server.js
 
-            - name: GitHub에서 코드 내려받기
-              uses: actions/checkout@v3
+#             - name: GitHub에서 코드 내려받기
+#               uses: actions/checkout@v3
 
-            - name: AI 코드 리뷰  
-              uses: dann0316/ai-code-reviewer@main
-              with:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-                OPENAI_API_MODEL: "gpt-4"
-                exclude: "**/*.json, **/*.md"
+#             - name: AI 코드 리뷰  
+#               uses: dann0316/ai-code-reviewer@main
+#               with:
+#                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#                 OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#                 OPENAI_API_MODEL: "gpt-4"
+#                 exclude: "**/*.json, **/*.md"
 
-# env 파일도 여기에 넣어서 하는 게 안전한가? 만약 안전하면 제어문 써서 backend 파일에 .env 파일 있으면 그대로 진행하고 없으면 여기에 작성한 .env 파일로 돌릴 수 있게 해야겠다
-# github 동작원리랑 react 동작원리랑 비슷한가? 가상 ~ 있어서 변경 사항만 반영하는?
+# # env 파일도 여기에 넣어서 하는 게 안전한가? 만약 안전하면 제어문 써서 backend 파일에 .env 파일 있으면 그대로 진행하고 없으면 여기에 작성한 .env 파일로 돌릴 수 있게 해야겠다
+# # github 동작원리랑 react 동작원리랑 비슷한가? 가상 ~ 있어서 변경 사항만 반영하는?
