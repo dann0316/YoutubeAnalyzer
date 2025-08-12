@@ -43,10 +43,7 @@ const Home = () => {
             <div className="w-full flex flex-row justify-center items-start gap-5 border border-[#44cfa587] rounded-2xl p-5 shadow-md">
                 <div className="w-1/2 flex flex-col justify-center items-start gap-2 border border-[#44cfa54b] rounded-2xl p-5">
                     <h3 className="text-xl font-semibold">
-                        현재 인기 키워드 🚀
-                        실시간 트렌드 분석: 지역별 인기 키워드를 수집하여 마케팅 전략에 활용.
-SEO 최적화: 검색량이 높은 키워드를 블로그 콘텐츠나 유튜브 제목에 반영.
-경쟁 분석: 특정 키워드와 연관된 트렌드를 분석하여 경쟁사의 전략 이해.
+                        최근 본 영상 ⌛
                     </h3>
                     <ul className="flex flex-col gap-3 border border-secondary p-5 rounded-xl w-full">
 
@@ -87,10 +84,13 @@ SEO 최적화: 검색량이 높은 키워드를 블로그 콘텐츠나 유튜브
                 </div>
             </div>
 
-            <div className="w-full flex flex-col justify-center items-start gap-5 border border-[#44cfa587] rounded-2xl p-5 shadow-md">
-                <h3 className="text-xl font-semibold">최근 본 영상 ⌛</h3>
+            {/* <div className="w-full flex flex-col justify-center items-start gap-5 border border-[#44cfa587] rounded-2xl p-5 shadow-md">
+                <h3 className="text-xl font-semibold">현재 인기 키워드 🚀
+                        실시간 트렌드 분석: 지역별 인기 키워드를 수집하여 마케팅 전략에 활용.
+SEO 최적화: 검색량이 높은 키워드를 블로그 콘텐츠나 유튜브 제목에 반영.
+경쟁 분석: 특정 키워드와 연관된 트렌드를 분석하여 경쟁사의 전략 이해.</h3>
                 <ul className="flex flex-col gap-3 border border-secondary p-5 rounded-xl w-full"></ul>
-            </div>
+            </div> */}
         </MainLayout>
     );
 };
