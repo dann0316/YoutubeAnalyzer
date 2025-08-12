@@ -137,7 +137,7 @@ const Header: React.FC<HeaderPropsType> = ({
             </nav>
 
             {/* 검색창, auth section */}
-            <div className="w-1/3 flex flex-row justify-end items-center gap-5">
+            <div className="w-1/3 flex flex-row justify-end items-center gap-5 relative">
                 {user ? (
                     <>
                         <div className="group w-2/3 flex flex-row justify-between items-center bg-primary rounded-lg p-4 gap-2 group-focus-within:bg-blue-500 transition-all duration-300">
@@ -149,12 +149,12 @@ const Header: React.FC<HeaderPropsType> = ({
                                     fetchSuggestions(e.target.value)
                                 }
                                 onKeyDown={handleKeyDown}
-                                onFocus={(e) => {
-                                    if (!user) {
-                                        alert("로그인 후 이용해주세요!");
-                                        e.target.blur();
-                                    }
-                                }}
+                                // onFocus={(e) => {
+                                //     if (!user) {
+                                //         alert("로그인 후 이용해주세요!");
+                                //         e.target.blur();
+                                //     }
+                                // }}
                                 className="w-full rounded-lg h-10 px-2 text-base font-medium"
                             />
 
@@ -176,7 +176,7 @@ const Header: React.FC<HeaderPropsType> = ({
                             </button>
 
                             {/* 자동완성 목록 */}
-                            <div className="absolute top-full left-28 w-[58%] bg-white z-20">
+                            <div className="absolute top-full left-40 w-[58%] bg-white z-20">
                                 {suggestions.length > 0 && (
                                     <ul className="border-4 border-primary rounded-lg overflow-hidden">
                                         {suggestions.map(
