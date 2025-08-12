@@ -6,7 +6,6 @@ import {
     FaChartBar,
     FaRegFileAlt,
 } from "react-icons/fa";
-import LogIn from "../pageui/LogIn";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "/logo.png";
 import { getAuth, onAuthStateChanged, type User, signOut } from "firebase/auth";
@@ -33,6 +32,7 @@ type HeaderPropsType = {
     setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
     setKeyword: React.Dispatch<React.SetStateAction<string>>;
     setSuggestions: React.Dispatch<React.SetStateAction<string[]>>;
+    setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Header: React.FC<HeaderPropsType> = ({
@@ -41,11 +41,10 @@ const Header: React.FC<HeaderPropsType> = ({
     fetchVideos,
     suggestions,
     setSelectedIndex,
-    selectedIndex,
+    // selectedIndex,
     setSuggestions,
+    setLoginModal,
 }) => {
-    const [loginModal, setLoginModal] = useState(false);
-
     const [user, setUser] = useState<User | null>(null);
     const navigate = useNavigate();
 
@@ -90,9 +89,12 @@ const Header: React.FC<HeaderPropsType> = ({
                 <Link
                     to={"/"}
                     className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
-                        ${location.pathname === '/' ? "bg-primary text-white" : "bg-gray-50 text-primary"}
+                        ${
+                            location.pathname === "/"
+                                ? "bg-primary text-white"
+                                : "bg-gray-50 text-primary"
+                        }
                         `}
-                    
                 >
                     <FaHome />
                     home
@@ -100,7 +102,11 @@ const Header: React.FC<HeaderPropsType> = ({
                 <Link
                     to={"/list"}
                     className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
-                        ${location.pathname === '/list' ? "bg-primary text-white" : "bg-gray-50 text-primary"}
+                        ${
+                            location.pathname === "/list"
+                                ? "bg-primary text-white"
+                                : "bg-gray-50 text-primary"
+                        }
                         `}
                 >
                     <FaListUl />
@@ -109,7 +115,11 @@ const Header: React.FC<HeaderPropsType> = ({
                 <Link
                     to={"/analyze"}
                     className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
-                        ${location.pathname === '/analyze' ? "bg-primary text-white" : "bg-gray-50 text-primary"}
+                        ${
+                            location.pathname === "/analyze"
+                                ? "bg-primary text-white"
+                                : "bg-gray-50 text-primary"
+                        }
                         `}
                 >
                     <FaChartBar />
@@ -128,84 +138,90 @@ const Header: React.FC<HeaderPropsType> = ({
 
             {/* 검색창, auth section */}
             <div className="w-1/3 flex flex-row justify-end items-center gap-5">
-                <div className="group w-2/3 flex flex-row justify-between items-center bg-primary rounded-lg p-4 gap-2 group-focus-within:bg-blue-500 transition-all duration-300">
-                    <input
-                        type="text"
-                        placeholder="검색할 키워드"
-                        value={keyword}
-                        onChange={(e) => fetchSuggestions(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        onFocus={(e) => {
-                            if (!user) {
-                                alert("로그인 후 이용해주세요!");
-                                e.target.blur();
-                            }
-                        }}
-                        className="w-full rounded-lg h-10 px-2 text-base font-medium"
-                    />
+                {user ? (
+                    <>
+                        <div className="group w-2/3 flex flex-row justify-between items-center bg-primary rounded-lg p-4 gap-2 group-focus-within:bg-blue-500 transition-all duration-300">
+                            <input
+                                type="text"
+                                placeholder="검색할 키워드"
+                                value={keyword}
+                                onChange={(e) =>
+                                    fetchSuggestions(e.target.value)
+                                }
+                                onKeyDown={handleKeyDown}
+                                onFocus={(e) => {
+                                    if (!user) {
+                                        alert("로그인 후 이용해주세요!");
+                                        e.target.blur();
+                                    }
+                                }}
+                                className="w-full rounded-lg h-10 px-2 text-base font-medium"
+                            />
 
-                    <button
-                        onClick={() => {
-                            if (point > 0) {
-                                alert("포인트가 1 차감됩니다!");
-                                setPoint(point - 1);
-                                fetchVideos();
-                                navigate("/list");
-                            } else {
-                                alert("포인트가 부족합니다!");
-                            }
-                        }}
-                        className="text-white"
-                        aria-label="검색"
-                    >
-                        <FaSearch />
-                    </button>
+                            <button
+                                onClick={() => {
+                                    if (point > 0) {
+                                        alert("포인트가 1 차감됩니다!");
+                                        setPoint(point - 1);
+                                        fetchVideos();
+                                        navigate("/list");
+                                    } else {
+                                        alert("포인트가 부족합니다!");
+                                    }
+                                }}
+                                className="text-white"
+                                aria-label="검색"
+                            >
+                                <FaSearch />
+                            </button>
 
-                    {/* 자동완성 목록 */}
-                    <div className="absolute top-full left-28 w-[58%] bg-white z-20">
-                        {suggestions.length > 0 && (
-                            <ul className="border-4 border-primary rounded-lg overflow-hidden">
-                                {suggestions.map((suggestion, index) => (
-                                    <li
-                                        key={index}
-                                        onMouseEnter={() =>
-                                            setSelectedIndex(index)
-                                        }
-                                        onClick={() => {
-                                            setKeyword(suggestion);
-                                            setSuggestions([]);
-                                            fetchVideos();
-                                        }}
-                                        className="p-2 cursor-pointer border border-primary transition duration-300 bg-white hover:bg-primary text-black hover:text-white"
-                                    >
-                                        {suggestion}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                </div>
+                            {/* 자동완성 목록 */}
+                            <div className="absolute top-full left-28 w-[58%] bg-white z-20">
+                                {suggestions.length > 0 && (
+                                    <ul className="border-4 border-primary rounded-lg overflow-hidden">
+                                        {suggestions.map(
+                                            (suggestion, index) => (
+                                                <li
+                                                    key={index}
+                                                    onMouseEnter={() =>
+                                                        setSelectedIndex(index)
+                                                    }
+                                                    onClick={() => {
+                                                        setKeyword(suggestion);
+                                                        setSuggestions([]);
+                                                        fetchVideos();
+                                                    }}
+                                                    className="p-2 cursor-pointer border border-primary transition duration-300 bg-white hover:bg-primary text-black hover:text-white"
+                                                >
+                                                    {suggestion}
+                                                </li>
+                                            )
+                                        )}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
 
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <button>
-                            <Avatar>
-                                <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                        </button>
-                    </DropdownMenuTrigger>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button>
+                                    <Avatar>
+                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                </button>
+                            </DropdownMenuTrigger>
 
-                    <DropdownMenuContent className="w-56" align="end">
-                        <DropdownMenuLabel>
-                            Hello!
-                            <h3 className="text-lg">{nickname}</h3>
-                            <p className="text-sm text-[#adadad]">{email}</p>
-                        </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            {user ? (
-                                <>
+                            <DropdownMenuContent className="w-56" align="end">
+                                <DropdownMenuLabel>
+                                    Hello!
+                                    <h3 className="text-lg">{nickname}</h3>
+                                    <p className="text-sm text-[#adadad]">
+                                        {email}
+                                    </p>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
                                     <DropdownMenuItem
                                         className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe] cursor-pointer"
                                         onClick={() => {
@@ -235,35 +251,32 @@ const Header: React.FC<HeaderPropsType> = ({
                                     >
                                         <LuUser /> MyPage
                                     </DropdownMenuItem>
-                                </>
-                            ) : (
-                                <>
-                                    <DropdownMenuItem
-                                        className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe]"
-                                        onClick={() => {
-                                            setLoginModal(true);
-                                        }}
-                                    >
-                                        <LuLogIn />
-                                        SignIn
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="text-white font-bold transition-all duration-300 text-lg border-2 border-primary bg-primary px-1 rounded-lg hover:bg-white hover:text-primary"
-                                        onClick={() => {
-                                            navigate("/signup");
-                                        }}
-                                    >
-                                        <LuUserPlus />
-                                        SingUp
-                                    </DropdownMenuItem>
-                                    {loginModal && (
-                                        <LogIn setLoginModal={setLoginModal} />
-                                    )}
-                                </>
-                            )}
-                        </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                                </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </>
+                ) : (
+                    <>
+                        <button
+                            className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe] flex flex-row justify-center items-center gap-2"
+                            onClick={() => {
+                                setLoginModal(true);
+                            }}
+                        >
+                            <LuLogIn />
+                            SignIn
+                        </button>
+                        <button
+                            className="text-primary font-bold transition-all duration-300 ease-in-out text-lg bg-white px-1 rounded-lg border-2 border-white hover:bg-[#dadadabe] hover:border-[#dadadabe] flex flex-row justify-center items-center gap-2"
+                            onClick={() => {
+                                navigate("/signup");
+                            }}
+                        >
+                            <LuUserPlus />
+                            SingUp
+                        </button>
+                    </>
+                )}
             </div>
         </header>
     );
