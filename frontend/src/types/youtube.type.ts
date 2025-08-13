@@ -32,12 +32,16 @@ export interface storeType {
     setKeyword: React.Dispatch<React.SetStateAction<string>>
 }
 
+export type AvatarChoice = "upload" | "male" | "female";
+
 export interface FormType {
     id: string;
     email: string;
     password: string;
     nickname: string;
     point: string;
+    avatar?: FileList;        // 업로드 파일
+    avatarChoice: AvatarChoice; // 선택 모드
 }
 
 export interface NewsItemsType {

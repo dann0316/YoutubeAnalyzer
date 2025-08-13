@@ -35,8 +35,6 @@ const LogIn = ({
         setIsLoading(true);
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            setIsLoading(false);
-            setLoginModal(false);
             alert("로그인 성공");
 
             // // 이건 선언한건지 실행한건 아니지않나? 변수형 함수, 익명함수 그거여서 바로실행인가?
@@ -65,9 +63,11 @@ const LogIn = ({
             // // 응답의 body를 json 형식으로 파싱
             // const data = await response.json();
         } catch (err) {
-            setIsLoading(false);
             alert("로그인 정보를 다시 확인해주세요!");
             console.error(err);
+        } finally {
+            setIsLoading(false);
+            setLoginModal(false);
         }
     };
 
