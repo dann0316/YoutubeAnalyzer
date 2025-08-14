@@ -99,6 +99,21 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/analyze"
+                    element={
+                        <ProtectedRoute requireAuth={true}>
+                            <Analyze />
+                        </ProtectedRoute>
+                    }
+                /><Route
+                    path="/analyze"
+                    element={
+                        <ProtectedRoute requireAuth={true}>
+                            <Analyze />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
 
             <Footer />
