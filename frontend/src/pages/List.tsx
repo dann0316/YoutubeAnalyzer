@@ -1,22 +1,29 @@
 import { useState } from "react";
 import Card from "@/components/viewui/Card";
-import type { ListPropsType, VideosType } from "../types/youtube.type";
+import type { VideosType } from "../types/youtube.type";
 import Detail from "../components/pageui/Detail";
 import MainLayout from "@/components/layoutui/MainLayout";
-import { useUserStore } from "@/stores/store";
+import { useAppStore, useUserStore } from "@/stores/store";
 
-const List: React.FC<ListPropsType> = ({
-    error,
-    videos,
-    getPerformanceLabel,
-    fetchVideos,
-    nextPageToken,
-    setVideos,
-}) => {
+interface ListProps {
+    getPerformanceLabel: (score: number) => string;
+}
+
+const List: React.FC<ListProps> = ({ getPerformanceLabel }) => {
     const [modal, setModal] = useState<boolean>(false);
     const [selectedVideo, setSelectedVideo] = useState<VideosType | null>(null);
-
     const [checkedVideos, setCheckedVideos] = useState<VideosType[]>([]);
+
+    // Zustand store에서 상태 및 함수 가져오기
+    const {
+        videos,
+        error,
+        fetchVideos,
+        nextPageToken,
+        setVideos,
+    } = useAppStore();
+
+    const { token } = useUserStore();
 
     const toggleChecked = (video: VideosType) => {
         setCheckedVideos((prev) => {
@@ -35,29 +42,15 @@ const List: React.FC<ListPropsType> = ({
         title: video.title,
     }));
 
-    const { token } = useUserStore();
-    
     const sendCheckedVideos = async () => {
         try {
-            // const token = await getTokenSomehow(); // 로그인된 사용자의 Firebase ID token
-
-            // const user = auth.currentUser;
-
-            // if (!user) {
-            //     alert("로그인이 필요합니다");
-            //     return;
-            // }
-
-            // const token = await user.getIdToken();
-
-            // fetch 반환값이 res
             const res = await fetch("http://localhost:3001/api/videos", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     token: token, // 헤더에 토큰 추가
                 },
-                body: JSON.stringify(filteredVideos), // 여러 개의 영상
+                body: JSON.stringify(filteredVideos),
             });
 
             const data = await res.json();
@@ -69,7 +62,6 @@ const List: React.FC<ListPropsType> = ({
         }
     };
 
-    // 기여도는 있어야할까? 없어도 될까?
     const titleArr = [
         "선택",
         "썸네일",
@@ -118,8 +110,6 @@ const List: React.FC<ListPropsType> = ({
 
                     if (i === 0) widthClass = "w-1/12";
                     else if (i === 2) widthClass = "w-3/12";
-
-                    // const des = "채널의 성장에 극적으로 기여한 정보를 수치화 한것으로 기여도가 높은 영상일수록 채널을 성장 시킬 잠재력이 있는 주제를 다룬 영상입니다.";
 
                     const des2 =
                         "채널에 있는 영상이 알림과 같은 구독자 기반의 노출과 관계 없이 자체성과를 올릴 경우 성과도가 높게 나타납니다.";

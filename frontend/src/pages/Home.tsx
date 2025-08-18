@@ -1,7 +1,7 @@
 import MainLayout from "@/components/layoutui/MainLayout";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { NewsItemsType } from "@/types/youtube.type";
-import { useKeywordStore } from "@/stores/store";
+import { useAppStore } from "@/stores/store";
 
 const Home = () => {
     const [news, setNews] = useState<NewsItemsType[]>([]);
@@ -21,7 +21,7 @@ const Home = () => {
         }
     };
 
-    const { keyword } = useKeywordStore();
+    const { keyword } = useAppStore();
 
     // 랜더링 시점 조절
     // useEffect(() => {

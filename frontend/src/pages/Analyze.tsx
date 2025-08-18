@@ -218,8 +218,14 @@ ${videoInfos}
                     </div>
                     <div className="w-full absolute bottom-6 flex flex-col justify-center items-start gap-3">
                         <button
-                            className="w-1/2 btn flex flex-row justify-center items-center gap-2 disabled:opacity-60"
-                            onClick={analyzeSelectedVideos}
+                            className="w-1/2 btn flex flex-row justify-center items-center gap-2 disabled:opacity-60 cursor-pointer"
+                            onClick={() => {
+                                if(selectedVideos.length === 0) {
+                                    alert('영상을 선택하세요!');
+                                } else {
+                                    analyzeSelectedVideos();
+                                }
+                            }}
                             disabled={
                                 isAnalyzing || selectedVideos.length === 0
                             }

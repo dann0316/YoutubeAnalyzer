@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactEventHandler } from "react";
+import { useEffect, useState } from "react";
 import {
     FaSearch,
     FaHome,
@@ -9,7 +9,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "/logo.png";
 import { getAuth, onAuthStateChanged, type User, signOut } from "firebase/auth";
-import { useKeywordStore, useUserStore } from "@/stores/store";
+import { useAppStore, useUserStore } from "@/stores/store";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -22,36 +22,26 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LuUser, LuLogIn, LuLogOut, LuUserPlus } from "react-icons/lu";
 
-type HeaderPropsType = {
-    keyword: string;
-    fetchSuggestions: (input: string) => void;
-    handleKeyDown: ReactEventHandler;
-    fetchVideos: (isNextPage?: boolean) => void;
-    suggestions: string[];
-    selectedIndex: number;
-    setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
-    setKeyword: React.Dispatch<React.SetStateAction<string>>;
-    setSuggestions: React.Dispatch<React.SetStateAction<string[]>>;
-    setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const Header: React.FC<HeaderPropsType> = ({
-    fetchSuggestions,
-    handleKeyDown,
-    fetchVideos,
-    suggestions,
-    setSelectedIndex,
-    // selectedIndex,
-    setSuggestions,
-    setLoginModal,
-}) => {
+const Header: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
     const navigate = useNavigate();
-
     const auth = getAuth();
+    const location = useLocation(); // 현재 경로 가져오기
 
-    const { keyword } = useKeywordStore();
-    const setKeyword = useKeywordStore((state) => state.setKeyword);
+    // Zustand store에서 상태 및 함수 가져오기
+    const {
+        keyword,
+        suggestions,
+        fetchSuggestions,
+        handleKeyDown,
+        fetchVideos,
+        setSelectedIndex,
+        setKeyword,
+        setSuggestions,
+        setLoginModal,
+    } = useAppStore();
+
+    const { nickname, point, email, setPoint } = useUserStore();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -59,16 +49,14 @@ const Header: React.FC<HeaderPropsType> = ({
                 setUser(user);
             } else {
                 setUser(null);
-                navigate("/");
+                // 비로그인 시 특정 페이지 접근 제한이 필요하다면 ProtectedRoute에서 처리하므로
+                // 여기서 강제 리디렉션이 꼭 필요한지 검토 필요
+                // navigate("/");
             }
         });
 
         return () => unsubscribe();
-    }, []);
-
-    const { nickname, point, email, setPoint } = useUserStore();
-
-    const location = useLocation(); // 현재 경로 가져오기
+    }, [auth]);
 
     return (
         <header className="fixed top-0 left-0 w-full h-28 bg-gray-50 border-b border-primary flex justify-between items-center px-10 z-10 shadow-md">
@@ -88,39 +76,33 @@ const Header: React.FC<HeaderPropsType> = ({
             <nav className="w-1/3 relative flex flex-row justify-center items-center gap-5 text-primary text-lg font-bold uppercase">
                 <Link
                     to={"/"}
-                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
-                        ${
-                            location.pathname === "/"
-                                ? "bg-primary text-white"
-                                : "bg-gray-50 text-primary"
-                        }
-                        `}
+                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out ${
+                        location.pathname === "/"
+                            ? "bg-primary text-white"
+                            : "bg-gray-50 text-primary"
+                    }`}
                 >
                     <FaHome />
                     home
                 </Link>
                 <Link
                     to={"/list"}
-                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
-                        ${
-                            location.pathname === "/list"
-                                ? "bg-primary text-white"
-                                : "bg-gray-50 text-primary"
-                        }
-                        `}
+                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out ${
+                        location.pathname === "/list"
+                            ? "bg-primary text-white"
+                            : "bg-gray-50 text-primary"
+                    }`}
                 >
                     <FaListUl />
                     list
                 </Link>
                 <Link
                     to={"/analyze"}
-                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out
-                        ${
-                            location.pathname === "/analyze"
-                                ? "bg-primary text-white"
-                                : "bg-gray-50 text-primary"
-                        }
-                        `}
+                    className={`flex flex-row justify-center items-center gap-1 px-2 py-1 rounded-lg hover:bg-primary hover:text-gray-50 transition-all duration-300 ease-in-out ${
+                        location.pathname === "/analyze"
+                            ? "bg-primary text-white"
+                            : "bg-gray-50 text-primary"
+                    }`}
                 >
                     <FaChartBar />
                     analyze
@@ -145,16 +127,8 @@ const Header: React.FC<HeaderPropsType> = ({
                                 type="text"
                                 placeholder="검색할 키워드"
                                 value={keyword}
-                                onChange={(e) =>
-                                    fetchSuggestions(e.target.value)
-                                }
+                                onChange={(e) => fetchSuggestions(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                // onFocus={(e) => {
-                                //     if (!user) {
-                                //         alert("로그인 후 이용해주세요!");
-                                //         e.target.blur();
-                                //     }
-                                // }}
                                 className="w-full rounded-lg h-10 px-2 text-base font-medium"
                             />
 
@@ -179,24 +153,21 @@ const Header: React.FC<HeaderPropsType> = ({
                             <div className="absolute top-full left-40 w-[58%] bg-white z-20">
                                 {suggestions.length > 0 && (
                                     <ul className="border-4 border-primary rounded-lg overflow-hidden">
-                                        {suggestions.map(
-                                            (suggestion, index) => (
-                                                <li
-                                                    key={index}
-                                                    onMouseEnter={() =>
-                                                        setSelectedIndex(index)
-                                                    }
-                                                    onClick={() => {
-                                                        setKeyword(suggestion);
-                                                        setSuggestions([]);
-                                                        fetchVideos();
-                                                    }}
-                                                    className="p-2 cursor-pointer border border-primary transition duration-300 bg-white hover:bg-primary text-black hover:text-white"
-                                                >
-                                                    {suggestion}
-                                                </li>
-                                            )
-                                        )}
+                                        {suggestions.map((suggestion, index) => (
+                                            <li
+                                                key={index}
+                                                onMouseEnter={() => setSelectedIndex(index)}
+                                                onClick={() => {
+                                                    setKeyword(suggestion);
+                                                    setSuggestions([]);
+                                                    fetchVideos();
+                                                    navigate("/list");
+                                                }}
+                                                className="p-2 cursor-pointer border border-primary transition duration-300 bg-white hover:bg-primary text-black hover:text-white"
+                                            >
+                                                {suggestion}
+                                            </li>
+                                        ))}
                                     </ul>
                                 )}
                             </div>
@@ -216,9 +187,7 @@ const Header: React.FC<HeaderPropsType> = ({
                                 <DropdownMenuLabel>
                                     Hello!
                                     <h3 className="text-lg">{nickname}</h3>
-                                    <p className="text-sm text-[#adadad]">
-                                        {email}
-                                    </p>
+                                    <p className="text-sm text-[#adadad]">{email}</p>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
@@ -228,15 +197,9 @@ const Header: React.FC<HeaderPropsType> = ({
                                             signOut(auth)
                                                 .then(() => {
                                                     alert("로그아웃 완료");
-                                                    console.log(
-                                                        "로그아웃 완료"
-                                                    );
                                                 })
                                                 .catch((error) => {
-                                                    console.error(
-                                                        "로그아웃 실패",
-                                                        error
-                                                    );
+                                                    console.error("로그아웃 실패", error);
                                                 });
                                         }}
                                     >
