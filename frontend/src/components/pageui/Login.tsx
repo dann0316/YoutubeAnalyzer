@@ -1,43 +1,4 @@
-import { FaTimes } from "react-icons/fa";
-import { useForm } from "react-hook-form";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
-import type { FormType } from "@/types/youtube.type";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/utils/firebase";
-import CardLayout from "../layoutui/CardLayout";
-import LoadingSpinner from "../viewui/LoadingSpinner";
-import { useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
-const LogIn = ({
-    setLoginModal,
-}: {
-    setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<FormType>();
-
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [pwVisible, setPwVisible] = useState<boolean>(false);
-
-    const onSignInSubmit = async ({ email, password }: FormType) => {
-        setIsLoading(true);
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            alert("로그인 성공");
-
-            // // 이건 선언한건지 실행한건 아니지않나? 변수형 함수, 익명함수 그거여서 바로실행인가?
+ // // 이건 선언한건지 실행한건 아니지않나? 변수형 함수, 익명함수 그거여서 바로실행인가?
             // const userCredential = await signInWithEmailAndPassword(
             //     auth,
             //     email,
@@ -62,6 +23,42 @@ const LogIn = ({
             // // fetch의 결과는 Response 객체
             // // 응답의 body를 json 형식으로 파싱
             // const data = await response.json();
+import { FaTimes } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import type { FormType } from "@/types/youtube.type";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/utils/firebase";
+import CardLayout from "../layoutui/CardLayout";
+import LoadingSpinner from "../viewui/LoadingSpinner";
+import { useState } from "react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useAppStore } from "@/stores/store"; 
+
+const LogIn = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<FormType>();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [pwVisible, setPwVisible] = useState<boolean>(false);
+    const setLoginModal = useAppStore((state) => state.setLoginModal); 
+
+    const onSignInSubmit = async ({ email, password }: FormType) => {
+        setIsLoading(true);
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("로그인 성공");
         } catch (err) {
             alert("로그인 정보를 다시 확인해주세요!");
             console.error(err);

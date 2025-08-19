@@ -63,12 +63,12 @@ export default function ProfileImgUpload({
                     className="w-40 h-40 rounded-full object-cover border"
                 />
             ) : (
-                    <label
-                        htmlFor="avatar"
-                        className="w-40 h-40 rounded-full border border-gray-500 flex flex-col justify-center items-center gap-2 p-3  bg-white cursor-pointer transition duration-300 ease-in-out hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    >
-                        <IoPersonAddOutline className="w-10 h-10" />
-                    </label>
+                <label
+                    htmlFor="avatar"
+                    className="w-40 h-40 rounded-full border border-gray-500 flex flex-col justify-center items-center gap-2 p-3  bg-white cursor-pointer transition duration-300 ease-in-out hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                >
+                    <IoPersonAddOutline className="w-10 h-10" />
+                </label>
             )}
 
             <div className="flex items-center justify-center gap-5">
@@ -127,6 +127,7 @@ export default function ProfileImgUpload({
                 </label>
             </div>
 
+            {/* 이미지 압축이 안맞으면 압축해주는 사이트로 이동버튼도 하나 만들기 */}
             {avatarChoice === "upload" && (
                 <>
                     <input
@@ -153,7 +154,6 @@ export default function ProfileImgUpload({
                             },
                         })}
                     />
-                    
 
                     {avatarFiles?.[0] && (
                         <div className="flex items-center gap-3">
