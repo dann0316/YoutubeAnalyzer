@@ -7,6 +7,7 @@ import type { VideosType } from "@/types/youtube.type";
 
 import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MyPage = () => {
     const { nickname, point, role, email } = useUserStore();
@@ -153,11 +154,11 @@ const MyPage = () => {
     // };
 
     return (
-        <MainLayout gap={"gap-14"}>
+        <MainLayout className={"gap-14"}>
             <h3 className="text-2xl font-bold text-black">My Page</h3>
             <Tabs
                 defaultValue="account"
-                className="border border-line w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden"
+                className="border border-primary/70 w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden"
             >
                 <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-line rounded-none">
                     <div className="w-full h-3/5 flex flex-col justify-center items-center border-b border-line">
@@ -234,7 +235,9 @@ const MyPage = () => {
                                 `}
                             >
                                 {loading ? (
-                                    <div><LoadingSpinner/></div>
+                                    <div>
+                                        <LoadingSpinner />
+                                    </div>
                                 ) : error ? (
                                     <h3 className="text-lg text-red-500 font-medium">
                                         {error}
@@ -272,9 +275,9 @@ const MyPage = () => {
                                                 <h3 className="text-base font-bold">
                                                     {video.title.length > 15
                                                         ? video.title.slice(
-                                                            0,
-                                                            15
-                                                        ) + "..."
+                                                              0,
+                                                              15
+                                                          ) + "..."
                                                         : video.title}
                                                 </h3>
                                                 <div className="w-full flex flex-row justify-center items-center gap-2">
@@ -308,12 +311,18 @@ const MyPage = () => {
                                 )}
                             </div>
                         </div>
-
                         {/* 요약 결과 표시 (videoManageMent 탭에 포함) */}
-                        <div className="w-full h-[150px] overflow-x-hidden overflow-y-auto p-5 border-2 border-primary rounded-lg">
+                        <div className="w-full h-[150px] overflow-x-hidden overflow-y-auto p-3 border-2 border-primary rounded-lg space-y-2">
                             <h3 className="text-base font-medium">
                                 클릭한 영상 요약
                             </h3>
+                            {isGeneratingSummary && (
+                                <div className="flex flex-col justify-center items-start gap-2">
+                                        <Skeleton className="h-5 w-1/3 rounded-md" />
+                                        <Skeleton className="h-8 w-1/4 rounded-md" />
+                                        <Skeleton className="h-5 w-1/3 rounded-md" />
+                                </div>
+                            )}
                             {geminiResponseText && (
                                 <div className="">
                                     <p className="whitespace-pre-wrap text-base text-[#636262]">

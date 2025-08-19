@@ -4,6 +4,7 @@ import type { VideosType } from "@/types/youtube.type";
 import { useEffect, useRef, useState } from "react";
 import { FaChartBar, FaPlay } from "react-icons/fa";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Analyze = () => {
     const { token } = useUserStore();
@@ -245,7 +246,12 @@ ${videoInfos}
                         <h3 className="font-semibold">분석 내용</h3>
                         {/* 분석 중이면 skeleton 느낌으로 자리 유지 */}
                         {isAnalyzing ? (
-                            <div className="w-full h-4 rounded bg-gray-200 animate-pulse" />
+                            <div className="w-full flex flex-col justify-center items-start gap-2">
+                                <Skeleton className="h-5 w-1/2 rounded-md"/>
+                                <Skeleton className="h-20 w-1/3 rounded-md"/>
+                                <Skeleton className="h-10 w-1/2 rounded-md"/>
+                                <Skeleton className="h-10 w-1/4 rounded-md"/>
+                            </div>
                         ) : (
                             <p>{response}</p>
                         )}
