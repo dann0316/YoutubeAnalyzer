@@ -160,8 +160,8 @@ const MyPage = () => {
                 defaultValue="account"
                 className="border border-primary/70 w-full rounded-3xl flex flex-row justify-center items-center overflow-hidden"
             >
-                <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-line rounded-none">
-                    <div className="w-full h-3/5 flex flex-col justify-center items-center border-b border-line">
+                <TabsList className="flex flex-col w-1/6 h-[40em] bg-white m-0 p-0 border-r border-primary/70 rounded-none">
+                    <div className="w-full h-3/5 flex flex-col justify-center items-center border-b border-primary/70">
                         <div className="flex flex-col justify-center items-center gap-5">
                             {/* empty section */}
                             <div></div>
@@ -205,17 +205,71 @@ const MyPage = () => {
                 <div className="w-5/6">
                     <TabsContent
                         value="account"
-                        className="flex flex-col justify-center items-center"
+                        className="flex flex-col justify-center items-center gap-3"
                     >
-                        <div>현재 포인트: {point}</div>
-                        <button
-                            className="btn"
-                            onClick={() => {
-                                setAddPointModal(true);
-                            }}
-                        >
-                            포인트 충전
-                        </button>
+                        {/* 프로필 사진 변경 section */}
+                        <div className="w-1/3 flex flex-col justify-center items-start gap-2">
+                            <h3 className="text-[16px] font-semibold">
+                                프로필
+                            </h3>
+                            <div className="w-full flex flex-row justify-between items-center gap-2">
+                                <input
+                                    type="text"
+                                    placeholder={nickname}
+                                    className="w-full border border-line h-12 rounded-lg p-2"
+                                />
+                                <button className="btn">프로필 사진 변경</button>
+                            </div>
+                        </div>
+
+                        {/* 닉네임 변경 section */}
+                        <div className="w-1/3 flex flex-col justify-center items-start gap-2">
+                            <h3 className="text-[16px] font-semibold">
+                                닉네임
+                            </h3>
+                            <div className="w-full flex flex-row justify-between items-center gap-2">
+                                <input
+                                    type="text"
+                                    placeholder={nickname}
+                                    className="w-full border border-line h-12 rounded-lg p-2"
+                                />
+                                <button className="btn">닉네임 변경</button>
+                            </div>
+                        </div>
+
+                        {/* 비밀번호 변경 section */}
+                        <div className="w-1/3 flex flex-col justify-center items-start gap-2">
+                            <h3 className="text-[16px] font-semibold">
+                                비밀번호
+                            </h3>
+                            <div className="w-full flex flex-row justify-between items-center gap-2">
+                                <input
+                                    type="text"
+                                    placeholder={nickname}
+                                    className="w-full border border-line h-12 rounded-lg p-2"
+                                />
+                                <button className="btn">비밀번호 변경</button>
+                            </div>
+                        </div>
+
+                        {/* 포인트 충전 section */}
+                        <div className="w-1/3 flex flex-col justify-center items-start gap-2">
+                            <h3 className="text-[16px] font-semibold">
+                                포인트 충전
+                            </h3>
+                            <div className="w-full flex flex-row justify-between items-center gap-2">
+                                <h3>현재 포인트: {point}</h3>
+                                <button
+                                    className="btn"
+                                    onClick={() => {
+                                        setAddPointModal(true);
+                                    }}
+                                >
+                                    포인트 충전
+                                </button>
+                            </div>
+                        </div>
+
                         {addPointModal && (
                             <AddPoint setAddPointModal={setAddPointModal} />
                         )}
@@ -318,9 +372,9 @@ const MyPage = () => {
                             </h3>
                             {isGeneratingSummary && (
                                 <div className="flex flex-col justify-center items-start gap-2">
-                                        <Skeleton className="h-5 w-1/3 rounded-md" />
-                                        <Skeleton className="h-8 w-1/4 rounded-md" />
-                                        <Skeleton className="h-5 w-1/3 rounded-md" />
+                                    <Skeleton className="h-5 w-1/3 rounded-md" />
+                                    <Skeleton className="h-8 w-1/4 rounded-md" />
+                                    <Skeleton className="h-5 w-1/3 rounded-md" />
                                 </div>
                             )}
                             {geminiResponseText && (

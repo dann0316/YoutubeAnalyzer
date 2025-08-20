@@ -135,7 +135,7 @@ const SignUp = () => {
                         <label className="font-semibold text-lg">이메일*</label>
                         <input
                             type="email"
-                            className="w-full border border-black h-12 rounded-lg p-2"
+                            className="w-full border border-line h-12 rounded-lg p-2"
                             placeholder="이메일은 필수입니다."
                             {...register("email", {
                                 required: "이메일은 필수입니다",
@@ -154,7 +154,8 @@ const SignUp = () => {
                             비밀번호*
                         </label>
                         <input
-                            className="w-full border border-black h-12 rounded-lg p-2"
+                            className="w-full border border-line h-12 rounded-lg p-2"
+                            placeholder="비밀번호는 필수입니다."
                             type="password"
                             {...register("password", {
                                 required: "비밀번호는 필수입니다",
@@ -172,7 +173,8 @@ const SignUp = () => {
                     <div className="w-full flex flex-col justify-center items-center gap-3">
                         <label className="font-semibold text-lg">닉네임*</label>
                         <input
-                            className="w-full border border-black h-12 rounded-lg p-2"
+                            className="w-full border border-line h-12 rounded-lg p-2"
+                            placeholder="닉네임은 필수입니다."
                             type="text"
                             {...register("nickname", {
                                 required: "닉네임은 필수입니다",

@@ -1,12 +1,14 @@
 import MainLayout from "@/components/layoutui/MainLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NewsItemsType } from "@/types/youtube.type";
 import { useAppStore } from "@/stores/store";
 
 const Home = () => {
     const [news, setNews] = useState<NewsItemsType[]>([]);
 
-    const fetchTrend = async (keyword: string) => {
+    const { keyword } = useAppStore();
+    
+    const fetchNews = async () => {
         try {
             const response = await fetch(
                 `http://localhost:3000/api/news?query=${keyword}`
@@ -21,13 +23,11 @@ const Home = () => {
         }
     };
 
-    const { keyword } = useAppStore();
-
     // 랜더링 시점 조절
-    // useEffect(() => {
-    //     if (!keyword) return;
-    //     fetchTrend(keyword);
-    // }, []);
+    useEffect(() => {
+        if (!keyword) return;
+        fetchNews();
+    }, []);
 
     return (
         <MainLayout>
@@ -54,7 +54,7 @@ const Home = () => {
                     <h3 className="text-xl font-semibold">
                         {keyword} 현재 뉴스 📰
                     </h3>
-                    <ul className="flex flex-col gap-3 border border-secondary p-5 rounded-xl w-full">
+                    <ul className="flex flex-col gap-3 border border-secondary p-5 rounded-xl w-full max-h-[500px] overflow-hidden overflow-y-auto">
                         {news.map((item, idx) => (
                             <li
                                 key={idx}
@@ -73,11 +73,10 @@ const Home = () => {
                                             .slice(0, 30) + "..."
                                         : item.title.replace(/<[^>]+>/g, "")}
                                 </a>
-                                {/* <p
-                                    dangerouslySetInnerHTML={{
+                                {/* 
+                                <p dangerouslySetInnerHTML={{
                                         __html: item.description,
-                                    }}
-                                /> */}
+                                    }} /> */}
                             </li>
                         ))}
                     </ul>
@@ -86,9 +85,7 @@ const Home = () => {
 
             {/* <div className="w-full flex flex-col justify-center items-start gap-5 border border-[#44cfa587] rounded-2xl p-5 shadow-md">
                 <h3 className="text-xl font-semibold">현재 인기 키워드 🚀
-                        실시간 트렌드 분석: 지역별 인기 키워드를 수집하여 마케팅 전략에 활용.
-SEO 최적화: 검색량이 높은 키워드를 블로그 콘텐츠나 유튜브 제목에 반영.
-경쟁 분석: 특정 키워드와 연관된 트렌드를 분석하여 경쟁사의 전략 이해.</h3>
+                        실시간 트렌드 분석: 지역별 인기 키워드를 수집하여 마케팅 전략에 활용. SEO 최적화: 검색량이 높은 키워드를 블로그 콘텐츠나 유튜브 제목에 반영. 경쟁 분석: 특정 키워드와 연관된 트렌드를 분석하여 경쟁사의 전략 이해.</h3>
                 <ul className="flex flex-col gap-3 border border-secondary p-5 rounded-xl w-full"></ul>
             </div> */}
         </MainLayout>
