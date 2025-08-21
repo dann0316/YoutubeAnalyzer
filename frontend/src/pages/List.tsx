@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Card from "@/components/viewui/Card";
 import type { VideosType } from "../types/youtube.type";
-import Detail from "../components/pageui/Detail";
+import Detail from "../components/viewui/Detail";
 import MainLayout from "@/components/layoutui/MainLayout";
 import { useAppStore, useUserStore } from "@/stores/store";
 import ListSkeleton from "@/components/viewui/ListSkeleton";

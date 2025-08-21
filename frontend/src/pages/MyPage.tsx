@@ -1,5 +1,5 @@
 import MainLayout from "@/components/layoutui/MainLayout";
-import AddPoint from "@/components/pageui/AddPoint";
+import AddPoint from "@/components/viewui/AddPoint";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LoadingSpinner from "@/components/viewui/LoadingSpinner";
 import { useUserStore } from "@/stores/store";

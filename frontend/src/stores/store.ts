@@ -1,35 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { VideosType, UserStoreType } from "../types/youtube.type";
+import type { UserStoreType, AppStateType } from "../types/youtube.type";
 import { updateUserPoint } from "@/utils/firestoreUser";
 
-// App 전역 상태를 위한 통합 인터페이스
-interface AppState {
-    // Youtube video state
-    videos: VideosType[];
-    nextPageToken: string | null;
-    error: Error | null;
-    fetchVideos: (isNextPage?: boolean) => Promise<void>;
-    setVideos: (videos: VideosType[]) => void;
-
-    // Keyword & Autocomplete state
-    keyword: string;
-    suggestions: string[];
-    selectedIndex: number;
-    setKeyword: (value: string | ((prev: string) => string)) => void;
-    fetchSuggestions: (input: string) => Promise<void>;
-    handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-    setSuggestions: (suggestions: string[]) => void;
-    setSelectedIndex: (index: number) => void;
-
-    // UI state
-    loginModal: boolean;
-    setLoginModal: (isOpen: boolean) => void;
-
-    isLoading: boolean;
-}
-
-export const useAppStore = create<AppState>((set, get) => ({
+export const useAppStore = create<AppStateType>((set, get) => ({
     // Youtube video state
     videos: [],
     nextPageToken: null,
