@@ -161,8 +161,7 @@ ${videoInfos}
             <div className="w-full flex gap-2 h-[600px]">
                 <div className="w-1/3 h-full flex flex-col justify-start items-start gap-5 border border-[#44cfa587] rounded-2xl p-5 shadow-md relative">
                     <div className="w-fit flex justify-center items-center gap-1 font-semibold">
-                        <FaPlay /> 수집된 영상 h는 없고 min-h랑 max-h만 있어도
-                        되나?
+                        <FaPlay /> 수집된 영상
                     </div>
 
                     <div
@@ -238,12 +237,14 @@ ${videoInfos}
                         </button>
 
                         {/* 진행바: 상태 연결 */}
+                        <div className="w-full flex flex-row justify-start items-center gap-3">
                         <Progress value={progress} className="w-2/3 h-3" />
                         {isAnalyzing && (
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-xs text-primary font-semibold">
                                 {progress}%
                             </span>
                         )}
+                        </div>
                     </div>
                 </div>
 

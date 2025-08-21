@@ -9,8 +9,9 @@ import { useInitUser } from "./hooks/useInitUser";
 import ProtectedRoute from "./components/authui/ProtectedRoute";
 import Footer from "./components/layoutui/Footer";
 import Analyze from "./pages/Analyze";
-import LogIn from "./components/pageui/LogIn";
+import LogIn from "@/components/viewui/Login";
 import { useAppStore } from "./stores/store";
+import { useTokenAutoLogout } from "@/hooks/useTokenAutoLogout";
 
 function App() {
     const { loginModal } = useAppStore();
@@ -25,6 +26,7 @@ function App() {
     };
 
     useInitUser();
+    useTokenAutoLogout();
 
     return (
         <div>

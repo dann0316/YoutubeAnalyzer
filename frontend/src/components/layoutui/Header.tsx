@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LuUser, LuLogIn, LuLogOut, LuUserPlus } from "react-icons/lu";
+import TokenStatus from "../authui/TokenStatus";
 
 const Header: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -119,10 +120,10 @@ const Header: React.FC = () => {
             </nav>
 
             {/* 검색창, auth section */}
-            <div className="w-1/3 flex flex-row justify-end items-center gap-5 relative">
+            <div className={`w-1/3 flex flex-row ${user ? "justify-between" : "justify-end"} items-center gap-5 relative`}>
                 {user ? (
                     <>
-                        <div className="group w-2/3 flex flex-row justify-between items-center bg-primary rounded-lg p-4 gap-2 group-focus-within:bg-blue-500 transition-all duration-300">
+                        <div className="group w-[300px] flex flex-row justify-between items-center bg-primary rounded-lg p-4 gap-2 group-focus-within:bg-blue-500 transition-all duration-300">
                             <input
                                 type="text"
                                 placeholder="검색할 키워드"
@@ -172,6 +173,8 @@ const Header: React.FC = () => {
                                 )}
                             </div>
                         </div>
+                        
+                        <TokenStatus />
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
