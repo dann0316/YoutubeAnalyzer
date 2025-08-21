@@ -112,7 +112,7 @@ const Detail = ({
             className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center overflow-y-auto`}
         >
             <div
-                className={`overflow-x-hidden overflow-y-auto w-7/12 h-7/12 max-h-7/12 border borde-white bg-[#eeeeee] rounded-3xl p-5 relative transition-all duration-300
+                className={`overflow-x-hidden overflow-y-auto w-7/12 h-7/12 max-h-[600px] border borde-white bg-[#eeeeee] rounded-3xl p-5 relative transition-all duration-300
             ${
                 modal
                     ? "opacity-100 scale-100"
