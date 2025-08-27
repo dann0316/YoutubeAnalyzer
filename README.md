@@ -21,7 +21,7 @@
 
 - 배포 URL: (추가 예정)
 
-- 기술 스택: React, TypeScript, Vite, Tailwind CSS, Chart.js, shadcn UI 라이브러리, Youtube Data API v3, Node.js, Express.js, Firebase(Fire Authentication, FireStore Database, Firebase Store), Puppeteer (웹 크롤링 기능 일부 포함 예정 -> 핫한 키워드), AWS EC2
+- 기술 스택: React, TypeScript, Vite, Tailwind CSS, Chart.js, shadcn UI 라이브러리, Youtube Data API v3, Naver News API, Node.js, Express.js, Firebase(Fire Authentication, FireStore Database, Firebase Store), Puppeteer (웹 크롤링 기능 일부 포함 예정 -> 핫한 키워드), AWS EC2
 
 
 # 아키텍쳐 및 폴더 구조:
@@ -135,11 +135,26 @@ project-root/
 
 
 # 주요 기능
--유튜브 영상 검색 및 조회수, 좋아요, 댓글 수 조회 (키워드 및 제목으로 검색)
--조회수 대비 구독자 수, 업로드일 기준 조회 속도, 시청 지속율, 참여율(댓글, 좋아요) 등을 분석하여 성과도 점수화
--성과도 평가
--자동완성 기능 (검색어 추천)
--검색 키워드 기반 검색 및 영상 제목 검색 지원
+
+> 영상 검색 & 데이터 수집
+
+- 키워드 기반 검색(자동 완성 기능): YouTube Data API를 활용해 영상 목록 및 네이버 기사를 가져옴
+
+- 검색 필터링: 영상 제목에 키워드가 포함된 경우만 추려서 정확도 향상
+
+- 상세 데이터 호출: 조회수, 좋아요, 댓글 수, 영상 길이, 업로드 날짜 등 추가 정보 수집
+
+> 성과도 분석 (커스텀 점수 로직)
+
+- 조회 속도 점수, 예상 시청 지속율 점수, 참여율 점수, 구독자 대비 효율 점수, 업로드 시간 보너스, 업로드 후 경과 일수 감점을 통한 성과도 점수
+
+- 최종 성과 점수(performanceScore)를 계산해 영상 간 상대적 성과 비교 가능
+
+> AI 분석 기능
+
+- Gemini API 활용: 영상의 내용을 가져와서 AI 분석 결과 제공 내용 요약
+
+- GPT API 활용: 수집한 영상들의 제목과 썸네일을 분석하여 해당 종류의 영상은 어떤 전략을 쓰고 적용했는지 요약 / 주요 키워드 추출(후처리 방향 수립 중) / 댓글 감성 분석(후처리 방향 수립 중)
 
 
 # 어려웠던 점과 해결 방법
