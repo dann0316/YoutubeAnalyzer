@@ -8,6 +8,7 @@ import LoadingSpinner from "@/components/viewui/LoadingSpinner";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import ProfileImgUpload from "@/components/authui/ProfileImgUpload";
+// import { uploadFileToStorage } from "@/utils/uploadFile";
 
 const SignUp = () => {
     const {
@@ -39,6 +40,7 @@ const SignUp = () => {
             // 2) 이미지가 있으면 업로드
             let photoURL: string | undefined;
             const file = avatar?.[0];
+            console.log(file);
             if (file) {
                 // 파일 타입/사이즈 기본 검증 (추가 안전장치)
                 if (
@@ -59,11 +61,15 @@ const SignUp = () => {
                     throw new Error("Image too large");
                 }
 
+                // Storage에 이미지 업로드
+                // 파일 확장자 정규화
                 const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+                // 참조 객체 만들기
                 const storageRef = ref(
                     storage,
                     `users/${user.uid}/avatar.${ext}`
                 );
+                // task는 업로드를 관리하는 객체 즉, UploadTask가 되고, 진행 상황을 구독할 수 있음
                 const task = uploadBytesResumable(storageRef, file, {
                     contentType: file.type,
                 });
@@ -89,7 +95,7 @@ const SignUp = () => {
             // 3) Auth 프로필 업데이트
             await updateProfile(user, { displayName: nickname, photoURL });
 
-            // 4) 백엔드 저장 (비밀번호는 절대 보내지 마세요)
+            // 4) 백엔드 저장 (비밀번호는 일단 보내기(개발 단계에서만))
             await fetch("http://localhost:3001/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -97,6 +103,7 @@ const SignUp = () => {
                     uid: user.uid,
                     email,
                     nickname,
+                    password,
                     photoURL,
                 }),
             });
@@ -135,7 +142,7 @@ const SignUp = () => {
                         <label className="font-semibold text-lg">이메일*</label>
                         <input
                             type="email"
-                            className="w-full border border-black h-12 rounded-lg p-2"
+                            className="w-full border border-line h-12 rounded-lg p-2"
                             placeholder="이메일은 필수입니다."
                             {...register("email", {
                                 required: "이메일은 필수입니다",
@@ -154,7 +161,8 @@ const SignUp = () => {
                             비밀번호*
                         </label>
                         <input
-                            className="w-full border border-black h-12 rounded-lg p-2"
+                            className="w-full border border-line h-12 rounded-lg p-2"
+                            placeholder="비밀번호는 필수입니다."
                             type="password"
                             {...register("password", {
                                 required: "비밀번호는 필수입니다",
@@ -172,7 +180,8 @@ const SignUp = () => {
                     <div className="w-full flex flex-col justify-center items-center gap-3">
                         <label className="font-semibold text-lg">닉네임*</label>
                         <input
-                            className="w-full border border-black h-12 rounded-lg p-2"
+                            className="w-full border border-line h-12 rounded-lg p-2"
+                            placeholder="닉네임은 필수입니다."
                             type="text"
                             {...register("nickname", {
                                 required: "닉네임은 필수입니다",

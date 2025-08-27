@@ -67,3 +67,28 @@ export interface UserStoreType {
     clearUser: () => void;
     setPoint: (value: number) => void;
 }
+
+export interface AppStateType {
+    // Youtube video state
+    videos: VideosType[];
+    nextPageToken: string | null;
+    error: Error | null;
+    fetchVideos: (isNextPage?: boolean) => Promise<void>;
+    setVideos: (videos: VideosType[]) => void;
+
+    // Keyword & Autocomplete state
+    keyword: string;
+    suggestions: string[];
+    selectedIndex: number;
+    setKeyword: (value: string | ((prev: string) => string)) => void;
+    fetchSuggestions: (input: string) => Promise<void>;
+    handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    setSuggestions: (suggestions: string[]) => void;
+    setSelectedIndex: (index: number) => void;
+
+    // UI state
+    loginModal: boolean;
+    setLoginModal: (isOpen: boolean) => void;
+
+    isLoading: boolean;
+}

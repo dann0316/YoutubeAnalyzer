@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Card from "@/components/viewui/Card";
 import type { VideosType } from "../types/youtube.type";
-import Detail from "../components/pageui/Detail";
+import Detail from "../components/viewui/Detail";
 import MainLayout from "@/components/layoutui/MainLayout";
 import { useAppStore, useUserStore } from "@/stores/store";
+import ListSkeleton from "@/components/viewui/ListSkeleton";
 
 interface ListProps {
     getPerformanceLabel: (score: number) => string;
@@ -15,13 +16,8 @@ const List: React.FC<ListProps> = ({ getPerformanceLabel }) => {
     const [checkedVideos, setCheckedVideos] = useState<VideosType[]>([]);
 
     // Zustand store에서 상태 및 함수 가져오기
-    const {
-        videos,
-        error,
-        fetchVideos,
-        nextPageToken,
-        setVideos,
-    } = useAppStore();
+    const { videos, error, fetchVideos, nextPageToken, setVideos, isLoading, } =
+        useAppStore();
 
     const { token } = useUserStore();
 
@@ -84,7 +80,7 @@ const List: React.FC<ListProps> = ({ getPerformanceLabel }) => {
     };
 
     return (
-        <MainLayout>
+        <MainLayout className="max-h-[740px] min-h-[740px] scroll-auto">
             {error && <p> 오류: {error ? error.message : null}</p>}
             <div className="w-full flex flex-row justify-between items-center">
                 <div className="w-fit flex flex-row justify-start items-center gap-2">
@@ -125,7 +121,13 @@ const List: React.FC<ListProps> = ({ getPerformanceLabel }) => {
                     );
                 })}
             </div>
-
+            {isLoading && videos.length === 0 && (
+                <div className="flex flex-col justify-start items-center gap-1">
+                    <ListSkeleton />
+                    <ListSkeleton />
+                    <ListSkeleton />
+                </div>
+            )}
             {videos.length > 0 ? (
                 videos.map((video, index) => (
                     <Card
