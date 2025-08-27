@@ -196,5 +196,5 @@ UX 개선을 위해 Skeleton UI를 도입하여 로딩 시 레이아웃이 불�
 
 : 초기에는 배포를 진행했으나, API 할당량 문제와 기능적 부족으로 현재는 배포를 중단한 상태입니다. 앞으로의 방향은 할당량 문제와 데이터적인 문제를 안정화하고 필요한 기능을 보완한 뒤, 백엔드는 EC2에 CD 파이프 라인을 열어 자동 배포하고, 프론트엔드 또한 Vecel 또는 Netlify를 통해 배포할 계획입니다.
 
-# 시연 영상
-<video src="./video/demo.mp4" controls width="600"></video>
+# 시연영상
+[시연 영상 보러가기 (YouTube)](https://www.youtube.com/watch?v=n_A8lxL0Vyk)
