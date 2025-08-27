@@ -151,7 +151,7 @@ const Header: React.FC = () => {
                             </button>
 
                             {/* 자동완성 목록 */}
-                            <div className="absolute top-full left-40 w-[58%] bg-white z-20">
+                            <div className="absolute top-full -left-1 w-[45%] bg-white z-20">
                                 {suggestions.length > 0 && (
                                     <ul className="border-4 border-primary rounded-lg overflow-hidden">
                                         {suggestions.map((suggestion, index) => (
