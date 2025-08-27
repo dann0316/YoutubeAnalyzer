@@ -24,7 +24,7 @@ app.use(cors({
 }));
 app.post('/api/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // front에서 받은 정보를 Authentication의 정보를 포함해서 Firestore DB로 저장
-    const { uid, nickname, password, point } = req.body;
+    const { uid, nickname, password, photoURL } = req.body;
     console.log("받은 요청 body:", req.body);
     try {
         const user = yield firebaseAdmin_1.default.auth().getUser(uid);
@@ -36,8 +36,9 @@ app.post('/api/register', (req, res) => __awaiter(void 0, void 0, void 0, functi
             email: `${user.email}`,
             nickname: `${nickname}`,
             password: `${password}`,
-            role: `${user.email === "cdl2141@gmail.com" ? "admin" : "user"}`,
-            point: `${user.email === "cdl2141@gmail.com" ? 1000 : 10}`,
+            point: user.email === "cdl2141@gmail.com" ? 1000 : 10,
+            role: user.email === "cdl2141@gmail.com" ? "admin" : "user",
+            profile: `${photoURL}`,
         });
         res.status(200).json({ message: '유저 저장 완료' });
     }
